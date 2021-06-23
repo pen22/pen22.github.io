@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title>Hexo</title>
+    <url>/2021/05/28/Hexo/</url>
+    <content><![CDATA[<h2 id="快速开始"><a href="#快速开始" class="headerlink" title="快速开始"></a>快速开始</h2><h3 id="创建一个新文章"><a href="#创建一个新文章" class="headerlink" title="创建一个新文章"></a>创建一个新文章</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p>
+<h3 id="运行服务器"><a href="#运行服务器" class="headerlink" title="运行服务器"></a>运行服务器</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br><span class="line">$ <span class="comment"># hexo s</span></span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
+<h3 id="生成静态文件"><a href="#生成静态文件" class="headerlink" title="生成静态文件"></a>生成静态文件</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br><span class="line">$ <span class="comment"># hexo g</span></span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p>
+<h3 id="发布到远程网站"><a href="#发布到远程网站" class="headerlink" title="发布到远程网站"></a>发布到远程网站</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br><span class="line">$ <span class="comment">#hexo d</span></span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+]]></content>
+      <categories>
+        <category>Hexo</category>
+      </categories>
+      <tags>
+        <tag>Hexo</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>LeetCode - 126.单词接龙 ||</title>
+    <url>/2021/06/21/LeetCode/leetcode-126/</url>
+    <content><![CDATA[<h3 id="题面"><a href="#题面" class="headerlink" title="题面"></a>题面</h3><p>给定两个单词（beginWord 和 endWord）和一个字典 wordList，找出所有从 beginWord 到 endWord 的最短转换序列。转换需遵循如下规则：</p>
+<p>每次转换只能改变一个字母。<br>转换后得到的单词必须是字典中的单词。<br>说明:</p>
+<ul>
+<li>如果不存在这样的转换序列，返回一个空列表。</li>
+<li>所有单词具有相同的长度。</li>
+<li>所有单词只由小写字母组成。</li>
+<li>字典中不存在重复的单词。</li>
+<li>你可以假设 beginWord 和 endWord 是非空的，且二者不相同。<span id="more"></span>
+<h3 id="样例"><a href="#样例" class="headerlink" title="样例"></a>样例</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">输入:</span><br><span class="line">beginWord = &quot;hit&quot;,</span><br><span class="line">endWord = &quot;cog&quot;,</span><br><span class="line">wordList = [&quot;hot&quot;,&quot;dot&quot;,&quot;dog&quot;,&quot;lot&quot;,&quot;log&quot;,&quot;cog&quot;]</span><br><span class="line"></span><br><span class="line">输出:</span><br><span class="line">[</span><br><span class="line">  [&quot;hit&quot;,&quot;hot&quot;,&quot;dot&quot;,&quot;dog&quot;,&quot;cog&quot;],</span><br><span class="line">  [&quot;hit&quot;,&quot;hot&quot;,&quot;lot&quot;,&quot;log&quot;,&quot;cog&quot;]</span><br><span class="line">]</span><br></pre></td></tr></table></figure></li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">输入:</span><br><span class="line">beginWord = &quot;hit&quot;</span><br><span class="line">endWord = &quot;cog&quot;</span><br><span class="line">wordList = [&quot;hot&quot;,&quot;dot&quot;,&quot;dog&quot;,&quot;lot&quot;,&quot;log&quot;]</span><br><span class="line"></span><br><span class="line">输出: []</span><br><span class="line"></span><br><span class="line">解释: endWord &quot;cog&quot; 不在字典中，所以不存在符合要求的转换序列。</span><br></pre></td></tr></table></figure>
+
+<h3 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h3><p>根据题意先将单词表构成一个无向图，然后bfs搜索路径。</p>
+<p>这里注意，因为要求返回全部最短路径，所以bfs的队列中单纯的存节点行不通（<del>Maybe可以吧</del>）。</p>
+<p>这里我们存路径，也就是<strong>从起点到这个点的路径</strong>，其他的和普通bfs没什么两样。</p>
+<p>另外就是时间卡的有点紧，在构图的时候没有那句<code>if(tmp &gt; 1) break;</code>就超时了？？找个时间优化一下算法。</p>
+<hr>
+<p>( 这个题确实有点让人头大，还是太菜了</p>
+<h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">vector&lt;vector&lt;string&gt;&gt; <span class="built_in">findLadders</span>(string beginWord, string endWord, vector&lt;string&gt;&amp; wordList) &#123;</span><br><span class="line">    <span class="keyword">int</span> n, len, beg, end;</span><br><span class="line">    unordered_map&lt;string, <span class="keyword">int</span>&gt; wti;</span><br><span class="line">    vector&lt;vector&lt;<span class="keyword">int</span>&gt;&gt; G;  </span><br><span class="line">    vector&lt;string&gt; words;  <span class="comment">//拷贝单词表</span></span><br><span class="line"></span><br><span class="line">    n = wordList.<span class="built_in">size</span>(); <span class="keyword">if</span>(n == <span class="number">0</span>) <span class="keyword">return</span> &#123;&#125;;</span><br><span class="line">    len = wordList[<span class="number">0</span>].<span class="built_in">size</span>();</span><br><span class="line">    words = wordList;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; i++) &#123;</span><br><span class="line">        wti[words[i]] = i;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(!wti.<span class="built_in">count</span>(endWord)) <span class="keyword">return</span> &#123;&#125;;</span><br><span class="line">    <span class="keyword">if</span>(!wti.<span class="built_in">count</span>(beginWord)) &#123; words.<span class="built_in">push_back</span>(beginWord); wti[beginWord] = n++; &#125;</span><br><span class="line">    </span><br><span class="line">    beg = wti[beginWord];</span><br><span class="line">    end = wti[endWord];</span><br><span class="line"></span><br><span class="line">    <span class="comment">//构图</span></span><br><span class="line">    G.<span class="built_in">resize</span>(n);</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; i++) &#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> j = i + <span class="number">1</span>; j &lt; n; j++) &#123;</span><br><span class="line">            <span class="keyword">int</span> tmp = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> k = <span class="number">0</span>; k &lt; len; k++) &#123;</span><br><span class="line">                <span class="keyword">if</span>(words[i][k] != words[j][k]) tmp++;</span><br><span class="line">                <span class="keyword">if</span>(tmp &gt; <span class="number">1</span>) <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span>(tmp == <span class="number">1</span>) &#123;</span><br><span class="line">                G[i].<span class="built_in">push_back</span>(j);</span><br><span class="line">                G[j].<span class="built_in">push_back</span>(i);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    vector&lt;vector&lt;string&gt;&gt; ans;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//搜路</span></span><br><span class="line">    <span class="function">vector&lt;<span class="keyword">int</span>&gt; <span class="title">dis</span><span class="params">(n, <span class="number">0x3f3f3f</span>)</span></span>;</span><br><span class="line">    dis[beg] = <span class="number">0</span>;</span><br><span class="line">    queue&lt;vector&lt;string&gt;&gt; q;</span><br><span class="line">    q.<span class="built_in">push</span>(&#123;beginWord&#125;);</span><br><span class="line">    <span class="keyword">while</span>(!q.<span class="built_in">empty</span>()) &#123;</span><br><span class="line">        vector&lt;string&gt; path = q.<span class="built_in">front</span>(); q.<span class="built_in">pop</span>();</span><br><span class="line">        <span class="keyword">int</span> u = wti[path.<span class="built_in">back</span>()];</span><br><span class="line">        <span class="keyword">if</span>(u == end) &#123;</span><br><span class="line">            ans.<span class="built_in">push_back</span>(path);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> v : G[u]) &#123;</span><br><span class="line">                <span class="keyword">if</span>(dis[u] + <span class="number">1</span> &lt;= dis[v]) &#123;</span><br><span class="line">                    vector&lt;string&gt; tmp = path;</span><br><span class="line">                    tmp.<span class="built_in">push_back</span>(words[v]);</span><br><span class="line">                    q.<span class="built_in">push</span>(tmp);</span><br><span class="line">                    dis[v] = dis[u] + <span class="number">1</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> ans;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>LeetCode</category>
+      </categories>
+      <tags>
+        <tag>搜索</tag>
+        <tag>最短路</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>LeetCode - 128.最长连续序列</title>
+    <url>/2021/06/22/LeetCode/leetcode-128/</url>
+    <content><![CDATA[<h3 id="题面"><a href="#题面" class="headerlink" title="题面"></a>题面</h3><p>给定一个未排序的整数数组，找出最长连续序列的长度。</p>
+<p>要求算法的**时间复杂度为 O(n)**。</p>
+<span id="more"></span>
+<h3 id="样例"><a href="#样例" class="headerlink" title="样例"></a>样例</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">输入: [100, 4, 200, 1, 3, 2]</span><br><span class="line">输出: 4</span><br><span class="line">解释: 最长连续序列是 [1, 2, 3, 4]。它的长度为 4。</span><br></pre></td></tr></table></figure>
+
+<h3 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h3><p>要求时间复杂度为 $O(n)$ 自然是<strong>不能排序</strong>了，并查集可以把<strong>属性相似的一类数聚在一起的作用</strong>，而且压缩后的并查集时间复杂度也很可观。</p>
+<ul>
+<li><p>先初始化数组中每一个数指向本身。</p>
+</li>
+<li><p>循环数组</p>
+<ul>
+<li><p>如果 $nums[i] + 1$ 在并查集中， $nums[i] + 1$ 指向 $nums[i]$。</p>
+</li>
+<li><p>如果 $nums[i] - 1$ 在并查集中， $nums[i]$ 指向 $nums[i] - 1$。</p>
+</li>
+</ul>
+</li>
+</ul>
+<p><strong>⚠这题依然有个空数组问题，又被坑了。。。</strong></p>
+<h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">unordered_map&lt;<span class="keyword">int</span>, <span class="keyword">int</span>&gt; p;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">find</span><span class="params">(<span class="keyword">int</span> x)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> x == p[x] ? x : p[x] = <span class="built_in">find</span>(p[x]);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">longestConsecutive</span><span class="params">(vector&lt;<span class="keyword">int</span>&gt;&amp; nums)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> n = nums.<span class="built_in">size</span>(); <span class="keyword">if</span>(n == <span class="number">0</span>) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> item : nums) &#123; p[item] = item; &#125;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> item : nums) &#123;</span><br><span class="line">        <span class="keyword">if</span>(p.<span class="built_in">count</span>(item + <span class="number">1</span>)) p[item + <span class="number">1</span>] = item;</span><br><span class="line">        <span class="keyword">if</span>(p.<span class="built_in">count</span>(item - <span class="number">1</span>)) p[item] = item - <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">int</span> ans = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> item : nums) &#123;</span><br><span class="line">        <span class="keyword">int</span> temp = <span class="built_in">find</span>(item);</span><br><span class="line">        ans = <span class="built_in">max</span>(ans, item - temp);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> ans + <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>LeetCode</category>
+      </categories>
+      <tags>
+        <tag>并查集</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>LeetCode - 238.除自身以外数组的乘积</title>
+    <url>/2021/06/22/LeetCode/leetcode-238/</url>
+    <content><![CDATA[<h3 id="题面"><a href="#题面" class="headerlink" title="题面"></a>题面</h3><p>给你一个长度为 n 的整数数组 nums，其中 n &gt; 1，返回输出数组 output ，其中 output[i] 等于 nums 中除 nums[i] 之外其余各元素的乘积。</p>
+<p><strong>提示</strong>：题目数据保证数组之中任意元素的全部前缀元素和后缀（甚至是整个数组）的乘积都在 32 位整数范围内。</p>
+<p><strong>说明</strong>: 请不要使用除法，且在 O(n) 时间复杂度内完成此题。</p>
+<p><strong>进阶</strong>：你可以在常数空间复杂度内完成这个题目吗？（ 出于对空间复杂度分析的目的，输出数组不被视为额外空间。)</p>
+<span id="more"></span>
+<h3 id="样例"><a href="#样例" class="headerlink" title="样例"></a>样例</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">输入: [1,2,3,4]</span><br><span class="line">输出: [24,12,8,6]</span><br></pre></td></tr></table></figure>
+
+<h3 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h3><ul>
+<li><p>常规做法<br>  一看到的一下子想到的可能就是把所有数累乘起来，然后<strong>循环</strong>一边，循环到那个数就<strong>除掉</strong>哪个数。但是注意如果这个题是累加的话可以这样做，但是这个题是累乘，如果有一个位置是0，这时候就会出错。</p>
+<p>  所以考虑另一种方法，将数组做一次<strong>前缀和后缀累乘</strong>，循环到某个数的时候将该数<strong>前缀乘以后缀</strong>即可</p>
+</li>
+<li><p>进阶做法<br>  在进阶里面要求到常数空间复杂度，如果是按照常规做法，需要用到<strong>left和right</strong>两个数组分别存<strong>前缀和后缀</strong>，另外还得开一个答案数组去存储计算答案。这样空间复杂度明显是 $O(n)$ ，因为题目要求中讲到</p>
+<blockquote>
+<p>出于对空间复杂度分析的目的，输出数组不被视为额外空间。</p>
+</blockquote>
+<p>  也就是常数空间复杂度的话就需要把答案数组拿进来<strong>重新利用</strong>，于是可以想到如下做法</p>
+<blockquote>
+<p>假设nums[] = {a, b, c, d}<br>  令ans[] = {1, a, ab, abc}<br>  然后倒着计算一边ans数组使得<br>  ans[] = {1 * bcd, a * cd, ab * d, abc}</p>
+</blockquote>
+<p>  这不刚好就是答案吗。这个题的做法就出来了</p>
+</li>
+</ul>
+<h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><ul>
+<li><p>常规做法</p>
+  <figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="function">vector&lt;<span class="keyword">int</span>&gt; <span class="title">productExceptSelf</span><span class="params">(vector&lt;<span class="keyword">int</span>&gt;&amp; nums)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> n = nums.<span class="built_in">size</span>();</span><br><span class="line">    <span class="function">vector&lt;<span class="keyword">int</span>&gt; <span class="title">left</span><span class="params">(n)</span>, <span class="title">right</span><span class="params">(n)</span>, <span class="title">ans</span><span class="params">(n)</span></span>;</span><br><span class="line">    </span><br><span class="line">    left[<span class="number">0</span>] = nums[<span class="number">0</span>]; right[n - <span class="number">1</span>] = nums[n - <span class="number">1</span>];</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; n; i++) &#123; left[i] = nums[i] * left[i - <span class="number">1</span>]; &#125;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = n - <span class="number">2</span>; i &gt;= <span class="number">0</span>; i--) &#123; right[i] = nums[i] * right[i + <span class="number">1</span>]; &#125;</span><br><span class="line">    </span><br><span class="line">    ans[<span class="number">0</span>] = right[<span class="number">1</span>]; ans[n - <span class="number">1</span>] = left[n - <span class="number">2</span>];</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; n - <span class="number">1</span>; i++) &#123;</span><br><span class="line">        ans[i] = left[i - <span class="number">1</span>] * right[i + <span class="number">1</span>];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> ans;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>进阶做法</p>
+  <figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="function">vector&lt;<span class="keyword">int</span>&gt; <span class="title">productExceptSelf</span><span class="params">(vector&lt;<span class="keyword">int</span>&gt;&amp; nums)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> n = nums.<span class="built_in">size</span>();</span><br><span class="line">    <span class="function">vector&lt;<span class="keyword">int</span>&gt; <span class="title">ans</span><span class="params">(n, <span class="number">1</span>)</span></span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; n; i++) &#123; </span><br><span class="line">        ans[i] = ans[i - <span class="number">1</span>] * nums[i - <span class="number">1</span>];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">int</span> tmp = nums[n - <span class="number">1</span>];</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = n - <span class="number">2</span>; i &gt;= <span class="number">0</span>; i--) &#123;</span><br><span class="line">        ans[i] *= tmp;</span><br><span class="line">        tmp *= nums[i];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> ans;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+]]></content>
+      <categories>
+        <category>LeetCode</category>
+      </categories>
+      <tags>
+        <tag>前缀和</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>LeetCode - 15.新21点</title>
+    <url>/2021/06/20/LeetCode/leetcode-15/</url>
+    <content><![CDATA[<h3 id="题面"><a href="#题面" class="headerlink" title="题面"></a>题面</h3><p>给你一个包含 n 个整数的数组 nums，判断 nums 中是否存在三个元素 a，b，c ，使得 a + b + c = 0 ？请你找出所有满足条件且不重复的三元组。</p>
+<p><strong>注意</strong>：答案中不可以包含重复的三元组。</p>
+<span id="more"></span>
+<h3 id="样例"><a href="#样例" class="headerlink" title="样例"></a>样例</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">输入：nums = [-1, 0, 1, 2, -1, 4]</span><br><span class="line">输出：ans = [[-1, 0, 1], [-1, -1, 2]]</span><br></pre></td></tr></table></figure>
+
+<h3 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h3><p>排序+双指针+vector数组去重，去重有两种方式🙂</p>
+<ul>
+<li><p>vector + set去重<br><code>set&lt;vector&lt;int&gt;&gt; s(ans.begin(), ans.end());</code><br><code>ans.assign(s.begin(), s.end());</code></p>
+<p>  过是可以过，但是….<br>  <a href="https://imgtu.com/i/RuxDV1"><img src="https://z3.ax1x.com/2021/06/23/RuxDV1.png" alt="RuxDV1.png"></a></p>
+</li>
+<li><p>第二种就是在代码里面去重，如果碰到重复的就跳过，这个不算太差..<br>  <a href="https://imgtu.com/i/Rux0bR"><img src="https://z3.ax1x.com/2021/06/23/Rux0bR.png" alt="Rux0bR.png"></a></p>
+</li>
+</ul>
+<h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">vector&lt;vector&lt;<span class="keyword">int</span>&gt;&gt; <span class="built_in">threeSum</span>(vector&lt;<span class="keyword">int</span>&gt;&amp; nums) &#123;</span><br><span class="line">    <span class="keyword">int</span> n = nums.<span class="built_in">size</span>();</span><br><span class="line">    <span class="keyword">if</span>(nums.<span class="built_in">size</span>() &lt; <span class="number">3</span>) <span class="keyword">return</span> &#123;&#125;;</span><br><span class="line">    <span class="built_in">sort</span>(nums.<span class="built_in">begin</span>(), nums.<span class="built_in">end</span>());</span><br><span class="line"></span><br><span class="line">    vector&lt;vector&lt;<span class="keyword">int</span>&gt;&gt; ans;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n - <span class="number">2</span> &amp;&amp; nums[i] &lt;= <span class="number">0</span>; i++) &#123;</span><br><span class="line">        <span class="keyword">int</span> l = i + <span class="number">1</span>, r = n - <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">if</span>(i &gt; <span class="number">0</span> &amp;&amp; nums[i] == nums[i - <span class="number">1</span>]) <span class="keyword">continue</span>;</span><br><span class="line">        <span class="keyword">while</span>(l &lt; r) &#123;</span><br><span class="line">            <span class="keyword">int</span> tmp = nums[i] + nums[l] + nums[r];</span><br><span class="line">            <span class="keyword">if</span>(tmp &gt; <span class="number">0</span>) r--;</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span>(tmp &lt; <span class="number">0</span>) l++;</span><br><span class="line">            <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="keyword">while</span>(l &lt; r &amp;&amp; nums[l] == nums[l + <span class="number">1</span>]) l++;</span><br><span class="line">                <span class="keyword">while</span>(l &lt; r &amp;&amp; nums[r] == nums[r - <span class="number">1</span>]) r--;</span><br><span class="line">                ans.<span class="built_in">push_back</span>(&#123;nums[i], nums[l], nums[r]&#125;);</span><br><span class="line">                l++; r--;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> ans;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>LeetCode</category>
+      </categories>
+      <tags>
+        <tag>排序</tag>
+        <tag>双指针</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>LeetCode - 29.顺时针打印矩阵</title>
+    <url>/2021/06/21/LeetCode/leetcode-29/</url>
+    <content><![CDATA[<h3 id="题面"><a href="#题面" class="headerlink" title="题面"></a>题面</h3><p>输入一个矩阵，按照从外向里以顺时针的顺序依次打印出每一个数字。</p>
+<span id="more"></span>
+<h3 id="样例"><a href="#样例" class="headerlink" title="样例"></a>样例</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">输入：matrix = [[1,2,3],[4,5,6],[7,8,9]]</span><br><span class="line">输出：[1,2,3,6,9,8,7,4,5]</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">输入：matrix = [[1,2,3,4],[5,6,7,8],[9,10,11,12]]</span><br><span class="line">输出：[1,2,3,4,8,12,11,10,9,5,6,7]</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">0 &lt;= matrix.length &lt;= 100</span><br><span class="line">0 &lt;= matrix[i].length &lt;= 100</span><br></pre></td></tr></table></figure>
+
+<h3 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h3><p>直接按照题意转就好了，这道题虽然标的Easy，但还是被<strong>空向量</strong>和<strong>数据范围不明确</strong>给坑了一下。。</p>
+<p>没有数据范围，我直接把访问过的地方标记 $0x3f3f3f3f$ 但其实这种做法是不对的，正确的做法是使用另一个 $vis$ 数组，$vis[i][j]$ 表示$i,j$ 这个位置输出过了。</p>
+<h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">ok</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> y, <span class="keyword">int</span> n, <span class="keyword">int</span> m)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span> &lt;= x &amp;&amp; x &lt; n &amp;&amp; <span class="number">0</span> &lt;= y &amp;&amp; y &lt; m;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function">vector&lt;<span class="keyword">int</span>&gt; <span class="title">spiralOrder</span><span class="params">(vector&lt;vector&lt;<span class="keyword">int</span>&gt;&gt;&amp; matrix)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> n = matrix.<span class="built_in">size</span>(); <span class="keyword">if</span>(n == <span class="number">0</span>) <span class="keyword">return</span> &#123;&#125;;</span><br><span class="line">    <span class="keyword">int</span> m = matrix[<span class="number">0</span>].<span class="built_in">size</span>();</span><br><span class="line">    <span class="function">vector&lt;<span class="keyword">int</span>&gt; <span class="title">ans</span><span class="params">(n * m)</span></span>;</span><br><span class="line">    <span class="keyword">int</span> cnt = <span class="number">0</span>, tmp = <span class="number">0</span>, inf = <span class="number">0x3f3f3f3f</span>;</span><br><span class="line">    <span class="keyword">int</span> x = <span class="number">0</span>, y = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">int</span> d[<span class="number">4</span>][<span class="number">2</span>] = &#123; &#123;<span class="number">0</span>, <span class="number">1</span>&#125;, &#123;<span class="number">1</span>, <span class="number">0</span>&#125;, &#123;<span class="number">0</span>, <span class="number">-1</span>&#125;, &#123;<span class="number">-1</span>, <span class="number">0</span>&#125; &#125;;</span><br><span class="line">    ans[cnt++] = matrix[<span class="number">0</span>][<span class="number">0</span>];</span><br><span class="line">    matrix[x][y] = inf;</span><br><span class="line">    <span class="keyword">while</span>(cnt &lt; n * m) &#123;</span><br><span class="line">        <span class="keyword">while</span>(<span class="built_in">ok</span>(x + d[tmp][<span class="number">0</span>], y + d[tmp][<span class="number">1</span>], n, m) &amp;&amp; matrix[x + d[tmp][<span class="number">0</span>]][y + d[tmp][<span class="number">1</span>]] != inf) &#123;</span><br><span class="line">            ans[cnt++] = matrix[x + d[tmp][<span class="number">0</span>]][y + d[tmp][<span class="number">1</span>]];</span><br><span class="line">            matrix[x + d[tmp][<span class="number">0</span>]][y + d[tmp][<span class="number">1</span>]] = inf;</span><br><span class="line">            x += d[tmp][<span class="number">0</span>];</span><br><span class="line">            y += d[tmp][<span class="number">1</span>];</span><br><span class="line">        &#125;</span><br><span class="line">        tmp = (tmp + <span class="number">1</span>) % <span class="number">4</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> ans;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>LeetCode</category>
+      </categories>
+      <tags>
+        <tag>数组</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>LeetCode - 42.连续子数组的最大和</title>
+    <url>/2021/06/21/LeetCode/leetcode-42/</url>
+    <content><![CDATA[<h3 id="题面"><a href="#题面" class="headerlink" title="题面"></a>题面</h3><p>输入一个整型数组，数组里有正数也有负数。数组中的一个或连续多个整数组成一个子数组。求所有子数组的和的最大值。</p>
+<p>要求<strong>时间复杂度</strong>为 $O(n)$ 。</p>
+<span id="more"></span>
+<h3 id="样例"><a href="#样例" class="headerlink" title="样例"></a>样例</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">输入: nums = [-2,1,-3,4,-1,2,1,-5,4]</span><br><span class="line">输出: 6</span><br><span class="line">解释: 连续子数组 [4,-1,2,1] 的和最大，为 6。</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">1 &lt;= arr.length &lt;= 10^5</span><br><span class="line">-100 &lt;= arr[i] &lt;= 100</span><br></pre></td></tr></table></figure>
+
+<h3 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h3><p><strong>状态定义</strong>：$dp[i] = 以nums[i]为结尾的连续子数组的和的最大值$</p>
+<p><strong>转移方程</strong>：若 $dp[i-1] \leq 0$ ，说明 $dp[i−1]$ 对 $dp[i]$ 产生负贡献，即 $dp[i-1] + nums[i]$ 还不如 $nums[i]$ 本身大。</p>
+<ul>
+<li><p>当 $dp[i-1] \leq 0$，$dp[i]=nums[i]$</p>
+</li>
+<li><p>当 $dp[i-1]&gt;0$，$dp[i] = dp[i-1]+nums[i]$</p>
+</li>
+</ul>
+<h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">maxSubArray</span><span class="params">(vector&lt;<span class="keyword">int</span>&gt;&amp; nums)</span> </span>&#123;</span><br><span class="line">    <span class="function">vector&lt;<span class="keyword">int</span>&gt; <span class="title">dp</span><span class="params">(nums.size())</span></span>;</span><br><span class="line">    dp[<span class="number">0</span>] = nums[<span class="number">0</span>];</span><br><span class="line">    <span class="keyword">int</span> ans = nums[<span class="number">0</span>];</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; nums.<span class="built_in">size</span>(); i++) &#123;</span><br><span class="line">        dp[i] = <span class="built_in">max</span>(dp[i - <span class="number">1</span>] + nums[i], nums[i]);</span><br><span class="line">        ans = <span class="built_in">max</span>(ans, dp[i]); </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> ans;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>LeetCode</category>
+      </categories>
+      <tags>
+        <tag>DP</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>LeetCode - 64.求1+2+...+n</title>
+    <url>/2021/06/21/LeetCode/leetcode-64/</url>
+    <content><![CDATA[<h3 id="题面"><a href="#题面" class="headerlink" title="题面"></a>题面</h3><ul>
+<li>求 1+2+…+n ，要求不能使用乘除法、for、while、if、else、switch、case等关键字及条件判断语句（A?B:C）。<span id="more"></span>
+<h3 id="样例"><a href="#样例" class="headerlink" title="样例"></a>样例</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">输入: n = 3</span><br><span class="line">输出: 6</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">输入: n = 9</span><br><span class="line">输出: 45</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h3><p>可以先思考通过求和公式 <code>n * (n + 1) &gt;&gt; 1</code> 但这种方式必须要用乘法，不然的话需要<code>if</code>来做判断，在偶数那里 <code> &gt;&gt; 1</code> ，所以这个思路会行不通。</p>
+<p>通过循环来求和 <code>while(n) sum += (n--);</code> 但是会用到<code>while</code>可这已经很精简了，没有用到乘除法只是多了一个while，while又可以通过递归消掉。</p>
+<ul>
+<li>思考如何去掉while循环，这里要明确一点，在 <code>C/C++</code> 中<code>&amp;&amp;</code>和<code>||</code>操作并不是对两个操作数都去判断一下，<strong>而是当<code>&amp;&amp;</code>, <code>||</code>第一个操作数就已经满足条件的情况下不会再去判断第二个操作数了</strong>，利用这一点可以作为递归的边界判断。<br>  假设当前循环到了 $x$<ul>
+<li><code>!x || (sum += x)</code> 表示当 $x$ 达到<strong>向下</strong>循环边界 0 时返回 <code>false</code>，这时递归停止</li>
+<li><code>x &amp;&amp; （sum += x)</code> 表示当 $x$ 达到<strong>向下</strong>循环边界 0 时返回 <code>false</code>，递归停止</li>
+<li><code>x ^ n</code> 表示当 $x$ 达到<strong>向上</strong>循环边界 n 时递归停止，但是这种方法需要另一个函数的配合</li>
+</ul>
+</li>
+</ul>
+<h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><ul>
+<li>3种</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">sumNums</span><span class="params">(<span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">    !n || (n += <span class="built_in">sumNums</span>(n - <span class="number">1</span>));</span><br><span class="line">    <span class="keyword">return</span> n;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">sumNums</span><span class="params">(<span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">    n &amp;&amp; (n += <span class="built_in">sumNums</span>(n - <span class="number">1</span>));</span><br><span class="line">    <span class="keyword">return</span> n;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">subSum</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">    (x ^ n) &amp;&amp; (x += <span class="built_in">subSum</span>(x + <span class="number">1</span>, n));</span><br><span class="line">    <span class="keyword">return</span> x;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">sumNums</span><span class="params">(<span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">subSum</span>(<span class="number">1</span>, n);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="https://i.loli.net/2020/06/02/Og8FAjvZ6pR2SKQ.png" alt="leetcode6-2_2.png"></p>
+]]></content>
+      <categories>
+        <category>LeetCode</category>
+      </categories>
+      <tags>
+        <tag>位运算</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>LeetCode - 837.新21点</title>
+    <url>/2021/06/22/LeetCode/leetcode-837/</url>
+    <content><![CDATA[<h3 id="题面"><a href="#题面" class="headerlink" title="题面"></a>题面</h3><p>爱丽丝参与一个大致基于纸牌游戏 “21点” 规则的游戏，描述如下：</p>
+<p>爱丽丝以 0 分开始，并在她的得分少于 K 分时抽取数字。 抽取时，她从 [1, W] 的范围中随机获得一个整数作为分数进行累计，其中 W 是整数。 每次抽取都是独立的，其结果具有相同的概率。</p>
+<p>当爱丽丝获得不少于 K 分时，她就停止抽取数字。 爱丽丝的分数不超过 N 的概率是多少？</p>
+<span id="more"></span>
+<h3 id="样例"><a href="#样例" class="headerlink" title="样例"></a>样例</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">输入：N = 10, K = 1, W = 10</span><br><span class="line">输出：1.00000</span><br><span class="line">说明：爱丽丝得到一张卡，然后停止。</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">输入：N = 6, K = 1, W = 10</span><br><span class="line">输出：0.60000</span><br><span class="line">说明：爱丽丝得到一张卡，然后停止。</span><br><span class="line">在 W = 10 的 6 种可能下，她的得分不超过 N = 6 分。</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">输入：N = 21, K = 17, W = 10</span><br><span class="line">输出：0.73278</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">1. 0 &lt;= K &lt;= N &lt;= 10000</span><br><span class="line">2. 1 &lt;= W &lt;= 10000</span><br><span class="line">3. 如果答案与正确答案的误差不超过 10^-5，则该答案将被视为正确答案通过。</span><br></pre></td></tr></table></figure>
+
+<h3 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h3><p>定义这样的<strong>dp数组</strong><br>$$dp[i] = 令初始分数为i，抽牌结束后不超过N的概率$$</p>
+<p>初始化 $dp$ 数组的时候 $dp[i]=1,i \in [K,N]$ $dp[i]=0,i \in (N,+ \infty )$ </p>
+<p>当<strong>初始分数</strong>为 $K-1$ 时，很明显知道<strong>概率</strong>为 $P= \frac{\sum_{i=K}^{K+W} dp[i]}{W}$ ，这时顺着公式从k-1推回0即可。</p>
+<p>但是这里注意一下数据范围，如果是这样先循环一个 $K$ ，再循环 $W$ ，时间复杂度会很高所以在处理的时候注意一下那一段 $\sum_{i=K}^{K+W} dp[i]$ ，<strong>计算的时候可以减去区间后面的，再加上区间前面的。</strong></p>
+<h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">double</span> <span class="title">new21Game</span><span class="params">(<span class="keyword">int</span> N, <span class="keyword">int</span> K, <span class="keyword">int</span> W)</span> </span>&#123;</span><br><span class="line">    <span class="function">vector&lt;<span class="keyword">double</span>&gt; <span class="title">dp</span><span class="params">(N + W + <span class="number">1</span>, <span class="number">0</span>)</span></span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = K; i &lt;= N; i++) dp[i] = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">double</span> tmp = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = K + <span class="number">1</span>; i &lt;= K + W; i++) tmp += dp[i];</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = K - <span class="number">1</span>; i &gt;= <span class="number">0</span>; i--) &#123;</span><br><span class="line">        tmp += dp[i + <span class="number">1</span>];</span><br><span class="line">        tmp -= dp[i + <span class="number">1</span> + W];</span><br><span class="line">        dp[i] = tmp / W;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> dp[<span class="number">0</span>];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>LeetCode</category>
+      </categories>
+      <tags>
+        <tag>DP</tag>
+      </tags>
+  </entry>
+</search>
