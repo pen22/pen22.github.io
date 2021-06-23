@@ -174,7 +174,7 @@
 
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">1 &lt;= arr.length &lt;= 10^5</span><br><span class="line">-100 &lt;= arr[i] &lt;= 100</span><br></pre></td></tr></table></figure>
 
-<h3 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h3><p><strong>状态定义</strong>：$dp[i] = 以nums[i]为结尾的连续子数组的和的最大值$</p>
+<h3 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h3><p><strong>状态定义</strong>：$dp[i]$ = 以$nums[i]$为结尾的连续子数组的和的最大值</p>
 <p><strong>转移方程</strong>：若 $dp[i-1] \leq 0$ ，说明 $dp[i−1]$ 对 $dp[i]$ 产生负贡献，即 $dp[i-1] + nums[i]$ 还不如 $nums[i]$ 本身大。</p>
 <ul>
 <li><p>当 $dp[i-1] \leq 0$，$dp[i]=nums[i]$</p>
@@ -183,6 +183,33 @@
 </li>
 </ul>
 <h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">maxSubArray</span><span class="params">(vector&lt;<span class="keyword">int</span>&gt;&amp; nums)</span> </span>&#123;</span><br><span class="line">    <span class="function">vector&lt;<span class="keyword">int</span>&gt; <span class="title">dp</span><span class="params">(nums.size())</span></span>;</span><br><span class="line">    dp[<span class="number">0</span>] = nums[<span class="number">0</span>];</span><br><span class="line">    <span class="keyword">int</span> ans = nums[<span class="number">0</span>];</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; nums.<span class="built_in">size</span>(); i++) &#123;</span><br><span class="line">        dp[i] = <span class="built_in">max</span>(dp[i - <span class="number">1</span>] + nums[i], nums[i]);</span><br><span class="line">        ans = <span class="built_in">max</span>(ans, dp[i]); </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> ans;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>LeetCode</category>
+      </categories>
+      <tags>
+        <tag>DP</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>LeetCode - 837.新21点</title>
+    <url>/2021/06/22/LeetCode/leetcode-837/</url>
+    <content><![CDATA[<h3 id="题面"><a href="#题面" class="headerlink" title="题面"></a>题面</h3><p>爱丽丝参与一个大致基于纸牌游戏 “21点” 规则的游戏，描述如下：</p>
+<p>爱丽丝以 0 分开始，并在她的得分少于 K 分时抽取数字。 抽取时，她从 [1, W] 的范围中随机获得一个整数作为分数进行累计，其中 W 是整数。 每次抽取都是独立的，其结果具有相同的概率。</p>
+<p>当爱丽丝获得不少于 K 分时，她就停止抽取数字。 爱丽丝的分数不超过 N 的概率是多少？</p>
+<span id="more"></span>
+<h3 id="样例"><a href="#样例" class="headerlink" title="样例"></a>样例</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">输入：N = 10, K = 1, W = 10</span><br><span class="line">输出：1.00000</span><br><span class="line">说明：爱丽丝得到一张卡，然后停止。</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">输入：N = 6, K = 1, W = 10</span><br><span class="line">输出：0.60000</span><br><span class="line">说明：爱丽丝得到一张卡，然后停止。</span><br><span class="line">在 W = 10 的 6 种可能下，她的得分不超过 N = 6 分。</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">输入：N = 21, K = 17, W = 10</span><br><span class="line">输出：0.73278</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">1. 0 &lt;= K &lt;= N &lt;= 10000</span><br><span class="line">2. 1 &lt;= W &lt;= 10000</span><br><span class="line">3. 如果答案与正确答案的误差不超过 10^-5，则该答案将被视为正确答案通过。</span><br></pre></td></tr></table></figure>
+
+<h3 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h3><p>定义这样的<strong>dp数组</strong><br>$$dp[i] = 令初始分数为i，抽牌结束后不超过N的概率$$</p>
+<p>初始化 $dp$ 数组的时候 $dp[i]=1,i \in [K,N]$ $dp[i]=0,i \in (N,+ \infty )$ </p>
+<p>当<strong>初始分数</strong>为 $K-1$ 时，很明显知道<strong>概率</strong>为 $P= \frac{\sum_{i=K}^{K+W} dp[i]}{W}$ ，这时顺着公式从k-1推回0即可。</p>
+<p>但是这里注意一下数据范围，如果是这样先循环一个 $K$ ，再循环 $W$ ，时间复杂度会很高所以在处理的时候注意一下那一段 $\sum_{i=K}^{K+W} dp[i]$ ，<strong>计算的时候可以减去区间后面的，再加上区间前面的。</strong></p>
+<h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">double</span> <span class="title">new21Game</span><span class="params">(<span class="keyword">int</span> N, <span class="keyword">int</span> K, <span class="keyword">int</span> W)</span> </span>&#123;</span><br><span class="line">    <span class="function">vector&lt;<span class="keyword">double</span>&gt; <span class="title">dp</span><span class="params">(N + W + <span class="number">1</span>, <span class="number">0</span>)</span></span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = K; i &lt;= N; i++) dp[i] = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">double</span> tmp = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = K + <span class="number">1</span>; i &lt;= K + W; i++) tmp += dp[i];</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = K - <span class="number">1</span>; i &gt;= <span class="number">0</span>; i--) &#123;</span><br><span class="line">        tmp += dp[i + <span class="number">1</span>];</span><br><span class="line">        tmp -= dp[i + <span class="number">1</span> + W];</span><br><span class="line">        dp[i] = tmp / W;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> dp[<span class="number">0</span>];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
       <categories>
         <category>LeetCode</category>
       </categories>
@@ -223,33 +250,6 @@
       </categories>
       <tags>
         <tag>位运算</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>LeetCode - 837.新21点</title>
-    <url>/2021/06/22/LeetCode/leetcode-837/</url>
-    <content><![CDATA[<h3 id="题面"><a href="#题面" class="headerlink" title="题面"></a>题面</h3><p>爱丽丝参与一个大致基于纸牌游戏 “21点” 规则的游戏，描述如下：</p>
-<p>爱丽丝以 0 分开始，并在她的得分少于 K 分时抽取数字。 抽取时，她从 [1, W] 的范围中随机获得一个整数作为分数进行累计，其中 W 是整数。 每次抽取都是独立的，其结果具有相同的概率。</p>
-<p>当爱丽丝获得不少于 K 分时，她就停止抽取数字。 爱丽丝的分数不超过 N 的概率是多少？</p>
-<span id="more"></span>
-<h3 id="样例"><a href="#样例" class="headerlink" title="样例"></a>样例</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">输入：N = 10, K = 1, W = 10</span><br><span class="line">输出：1.00000</span><br><span class="line">说明：爱丽丝得到一张卡，然后停止。</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">输入：N = 6, K = 1, W = 10</span><br><span class="line">输出：0.60000</span><br><span class="line">说明：爱丽丝得到一张卡，然后停止。</span><br><span class="line">在 W = 10 的 6 种可能下，她的得分不超过 N = 6 分。</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">输入：N = 21, K = 17, W = 10</span><br><span class="line">输出：0.73278</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">1. 0 &lt;= K &lt;= N &lt;= 10000</span><br><span class="line">2. 1 &lt;= W &lt;= 10000</span><br><span class="line">3. 如果答案与正确答案的误差不超过 10^-5，则该答案将被视为正确答案通过。</span><br></pre></td></tr></table></figure>
-
-<h3 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h3><p>定义这样的<strong>dp数组</strong><br>$$dp[i] = 令初始分数为i，抽牌结束后不超过N的概率$$</p>
-<p>初始化 $dp$ 数组的时候 $dp[i]=1,i \in [K,N]$ $dp[i]=0,i \in (N,+ \infty )$ </p>
-<p>当<strong>初始分数</strong>为 $K-1$ 时，很明显知道<strong>概率</strong>为 $P= \frac{\sum_{i=K}^{K+W} dp[i]}{W}$ ，这时顺着公式从k-1推回0即可。</p>
-<p>但是这里注意一下数据范围，如果是这样先循环一个 $K$ ，再循环 $W$ ，时间复杂度会很高所以在处理的时候注意一下那一段 $\sum_{i=K}^{K+W} dp[i]$ ，<strong>计算的时候可以减去区间后面的，再加上区间前面的。</strong></p>
-<h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">double</span> <span class="title">new21Game</span><span class="params">(<span class="keyword">int</span> N, <span class="keyword">int</span> K, <span class="keyword">int</span> W)</span> </span>&#123;</span><br><span class="line">    <span class="function">vector&lt;<span class="keyword">double</span>&gt; <span class="title">dp</span><span class="params">(N + W + <span class="number">1</span>, <span class="number">0</span>)</span></span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = K; i &lt;= N; i++) dp[i] = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">double</span> tmp = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = K + <span class="number">1</span>; i &lt;= K + W; i++) tmp += dp[i];</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = K - <span class="number">1</span>; i &gt;= <span class="number">0</span>; i--) &#123;</span><br><span class="line">        tmp += dp[i + <span class="number">1</span>];</span><br><span class="line">        tmp -= dp[i + <span class="number">1</span> + W];</span><br><span class="line">        dp[i] = tmp / W;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> dp[<span class="number">0</span>];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
-      <categories>
-        <category>LeetCode</category>
-      </categories>
-      <tags>
-        <tag>DP</tag>
       </tags>
   </entry>
 </search>
