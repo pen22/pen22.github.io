@@ -20,17 +20,22 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="Computer Lover">
-<meta property="og:type" content="website">
-<meta property="og:title" content="pen22">
-<meta property="og:url" content="http://example.com/archives/2021/">
+  <meta name="description" content="题面 求 1+2+…+n ，要求不能使用乘除法、for、while、if、else、switch、case等关键字及条件判断语句（A?B:C）。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LeetCode - 64.求1+2+...+n">
+<meta property="og:url" content="http://example.com/2021/06/21/LeetCode/leetcode-64/">
 <meta property="og:site_name" content="pen22">
-<meta property="og:description" content="Computer Lover">
+<meta property="og:description" content="题面 求 1+2+…+n ，要求不能使用乘除法、for、while、if、else、switch、case等关键字及条件判断语句（A?B:C）。">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2020/06/02/Og8FAjvZ6pR2SKQ.png">
+<meta property="article:published_time" content="2021-06-21T02:03:07.000Z">
+<meta property="article:modified_time" content="2021-06-23T15:40:00.895Z">
 <meta property="article:author" content="pen22">
+<meta property="article:tag" content="位运算">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2020/06/02/Og8FAjvZ6pR2SKQ.png">
 
-<link rel="canonical" href="http://example.com/archives/2021/">
+<link rel="canonical" href="http://example.com/2021/06/21/LeetCode/leetcode-64/">
 
 
 <script id="page-configurations">
@@ -38,12 +43,12 @@
   CONFIG.page = {
     sidebar: "",
     isHome : false,
-    isPost : false,
+    isPost : true,
     lang   : 'zh-CN'
   };
 </script>
 
-  <title>归档 | pen22</title>
+  <title>LeetCode - 64.求1+2+...+n | pen22</title>
   
 
 
@@ -154,216 +159,150 @@
         <div class="content-wrap">
           
 
-          <div class="content archive">
+          <div class="content post posts-expand">
             
 
+    
   
   
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/06/21/LeetCode/leetcode-64/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="pen22">
+      <meta itemprop="description" content="Computer Lover">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="pen22">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          LeetCode - 64.求1+2+...+n
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-06-21 10:03:07" itemprop="dateCreated datePublished" datetime="2021-06-21T10:03:07+08:00">2021-06-21</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-06-23 23:40:00" itemprop="dateModified" datetime="2021-06-23T23:40:00+08:00">2021-06-23</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/LeetCode/" itemprop="url" rel="index"><span itemprop="name">LeetCode</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2021/06/21/LeetCode/leetcode-64/" class="post-meta-item leancloud_visitors" data-flag-title="LeetCode - 64.求1+2+...+n" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
   
-  <div class="post-block">
-    <div class="posts-collapse">
-      <div class="collection-title">
-        <span class="collection-header">嗯..! 目前共计 9 篇日志。 继续努力。</span>
-      </div>
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2021/06/21/LeetCode/leetcode-64/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021/06/21/LeetCode/leetcode-64/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-    <div class="collection-year">
-      <span class="collection-header">2021</span>
-    </div>
+        <h3 id="题面"><a href="#题面" class="headerlink" title="题面"></a>题面</h3><ul>
+<li>求 1+2+…+n ，要求不能使用乘除法、for、while、if、else、switch、case等关键字及条件判断语句（A?B:C）。<span id="more"></span>
+<h3 id="样例"><a href="#样例" class="headerlink" title="样例"></a>样例</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入: n = 3</span><br><span class="line">输出: 6</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入: n = 9</span><br><span class="line">输出: 45</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h3><p>可以先思考通过求和公式 <code>n * (n + 1) &gt;&gt; 1</code> 但这种方式必须要用乘法，不然的话需要<code>if</code>来做判断，在偶数那里 <code> &gt;&gt; 1</code> ，所以这个思路会行不通。</p>
+<p>通过循环来求和 <code>while(n) sum += (n--);</code> 但是会用到<code>while</code>可这已经很精简了，没有用到乘除法只是多了一个while，while又可以通过递归消掉。</p>
+<ul>
+<li>思考如何去掉while循环，这里要明确一点，在 <code>C/C++</code> 中<code>&amp;&amp;</code>和<code>||</code>操作并不是对两个操作数都去判断一下，<strong>而是当<code>&amp;&amp;</code>, <code>||</code>第一个操作数就已经满足条件的情况下不会再去判断第二个操作数了</strong>，利用这一点可以作为递归的边界判断。<br>  假设当前循环到了 $x$<ul>
+<li><code>!x || (sum += x)</code> 表示当 $x$ 达到<strong>向下</strong>循环边界 0 时返回 <code>false</code>，这时递归停止</li>
+<li><code>x &amp;&amp; （sum += x)</code> 表示当 $x$ 达到<strong>向下</strong>循环边界 0 时返回 <code>false</code>，递归停止</li>
+<li><code>x ^ n</code> 表示当 $x$ 达到<strong>向上</strong>循环边界 n 时递归停止，但是这种方法需要另一个函数的配合</li>
+</ul>
+</li>
+</ul>
+<h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><ul>
+<li>3种</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">sumNums</span><span class="params">(<span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">    !n || (n += <span class="built_in">sumNums</span>(n - <span class="number">1</span>));</span><br><span class="line">    <span class="keyword">return</span> n;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">sumNums</span><span class="params">(<span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">    n &amp;&amp; (n += <span class="built_in">sumNums</span>(n - <span class="number">1</span>));</span><br><span class="line">    <span class="keyword">return</span> n;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-06-22T19:08:25+08:00"
-              content="2021-06-22">
-          06-22
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/06/22/LeetCode/leetcode-837/" itemprop="url">
-            <span itemprop="name">LeetCode - 837.新21点</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-06-22T15:08:25+08:00"
-              content="2021-06-22">
-          06-22
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/06/22/LeetCode/leetcode-238/" itemprop="url">
-            <span itemprop="name">LeetCode - 238.除自身以外数组的乘积</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-06-22T10:08:25+08:00"
-              content="2021-06-22">
-          06-22
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/06/22/LeetCode/leetcode-128/" itemprop="url">
-            <span itemprop="name">LeetCode - 128.最长连续序列</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-06-21T10:08:25+08:00"
-              content="2021-06-21">
-          06-21
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/06/21/LeetCode/leetcode-126/" itemprop="url">
-            <span itemprop="name">LeetCode - 126.单词接龙 ||</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-06-21T10:03:07+08:00"
-              content="2021-06-21">
-          06-21
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/06/21/LeetCode/leetcode-42/" itemprop="url">
-            <span itemprop="name">LeetCode - 42.连续子数组的最大和</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-06-21T10:03:07+08:00"
-              content="2021-06-21">
-          06-21
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/06/21/LeetCode/leetcode-64/" itemprop="url">
-            <span itemprop="name">LeetCode - 64.求1+2+...+n</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-06-21T09:03:07+08:00"
-              content="2021-06-21">
-          06-21
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/06/21/LeetCode/leetcode-29/" itemprop="url">
-            <span itemprop="name">LeetCode - 29.顺时针打印矩阵</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-06-20T08:03:07+08:00"
-              content="2021-06-20">
-          06-20
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/06/20/LeetCode/leetcode-15/" itemprop="url">
-            <span itemprop="name">LeetCode - 15.新21点</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-05-28T17:30:52+08:00"
-              content="2021-05-28">
-          05-28
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/05/28/Hexo/" itemprop="url">
-            <span itemprop="name">Hexo</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">subSum</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">    (x ^ n) &amp;&amp; (x += <span class="built_in">subSum</span>(x + <span class="number">1</span>, n));</span><br><span class="line">    <span class="keyword">return</span> x;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">sumNums</span><span class="params">(<span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">subSum</span>(<span class="number">1</span>, n);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="https://i.loli.net/2020/06/02/Og8FAjvZ6pR2SKQ.png" alt="leetcode6-2_2.png"></p>
 
     </div>
-  </div>
-  
-  
-  
 
+    
+    
+    
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/%E4%BD%8D%E8%BF%90%E7%AE%97/" rel="tag"><i class="fa fa-tag"></i> 位运算</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/06/21/LeetCode/leetcode-29/" rel="prev" title="LeetCode - 29.顺时针打印矩阵">
+      <i class="fa fa-chevron-left"></i> LeetCode - 29.顺时针打印矩阵
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/06/21/LeetCode/leetcode-42/" rel="next" title="LeetCode - 42.连续子数组的最大和">
+      LeetCode - 42.连续子数组的最大和 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
   
 
 
 
           </div>
           
+    <div class="comments" id="valine-comments"></div>
 
 <script>
   window.addEventListener('tabs:register', () => {
@@ -410,6 +349,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A2%98%E9%9D%A2"><span class="nav-number">1.</span> <span class="nav-text">题面</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B7%E4%BE%8B"><span class="nav-number">2.</span> <span class="nav-text">样例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%9D%E8%B7%AF"><span class="nav-number">3.</span> <span class="nav-text">思路</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81"><span class="nav-number">4.</span> <span class="nav-text">代码</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
