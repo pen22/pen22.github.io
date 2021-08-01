@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="通用API12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667686970717273747576777879808182struct http_message &amp;#123;  struct mg_st">
+<meta property="og:type" content="article">
+<meta property="og:title" content="mongoose API参考">
+<meta property="og:url" content="http://example.com/2021/08/01/mongoose-API%E5%8F%82%E8%80%83/">
+<meta property="og:site_name" content="pen22">
+<meta property="og:description" content="通用API12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667686970717273747576777879808182struct http_message &amp;#123;  struct mg_st">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-08-01T03:40:38.000Z">
+<meta property="article:modified_time" content="2021-08-01T03:41:57.800Z">
+<meta property="article:author" content="pen22">
+<meta property="article:tag" content="mongoose">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2021/08/01/mongoose-API%E5%8F%82%E8%80%83/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>mongoose API参考 | pen22</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">pen22</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-主页">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>主页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-标签">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-分类">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-归档">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+
+  <a href="https://github.com/chirsilver" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/08/01/mongoose-API%E5%8F%82%E8%80%83/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="pen22">
+      <meta itemprop="description" content="Computer Lover">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="pen22">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          mongoose API参考
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-08-01 11:40:38 / 修改时间：11:41:57" itemprop="dateCreated datePublished" datetime="2021-08-01T11:40:38+08:00">2021-08-01</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">Linux网络编程</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2021/08/01/mongoose-API%E5%8F%82%E8%80%83/" class="post-meta-item leancloud_visitors" data-flag-title="mongoose API参考" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2021/08/01/mongoose-API%E5%8F%82%E8%80%83/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021/08/01/mongoose-API%E5%8F%82%E8%80%83/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="通用API"><a href="#通用API" class="headerlink" title="通用API"></a>通用API</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">http_message</span> &#123;</span></span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">mg_str</span> <span class="title">message</span>;</span> <span class="comment">/* Whole message: request line + headers + body */</span></span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">mg_str</span> <span class="title">body</span>;</span>    <span class="comment">/* Message body. 0-length for requests with no body */</span></span><br><span class="line"> </span><br><span class="line">  <span class="comment">/* HTTP Request line (or HTTP response line) */</span></span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">mg_str</span> <span class="title">method</span>;</span> <span class="comment">/* &quot;GET&quot; */</span></span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">mg_str</span> <span class="title">uri</span>;</span>    <span class="comment">/* &quot;/my_file.html&quot; */</span></span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">mg_str</span> <span class="title">proto</span>;</span>  <span class="comment">/* &quot;HTTP/1.1&quot; -- for both request and response */</span></span><br><span class="line"> </span><br><span class="line">  <span class="comment">/* For responses, code and response status message are set */</span></span><br><span class="line">  <span class="keyword">int</span> resp_code;</span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">mg_str</span> <span class="title">resp_status_msg</span>;</span></span><br><span class="line"> </span><br><span class="line">  <span class="comment">/*</span></span><br><span class="line"><span class="comment">   * Query-string part of the URI. For example, for HTTP request</span></span><br><span class="line"><span class="comment">   *    GET /foo/bar?param1=val1&amp;param2=val2</span></span><br><span class="line"><span class="comment">   *    |    uri    |     query_string     |</span></span><br><span class="line"><span class="comment">   *</span></span><br><span class="line"><span class="comment">   * Note that question mark character doesn&#x27;t belong neither to the uri,</span></span><br><span class="line"><span class="comment">   * nor to the query_string</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">mg_str</span> <span class="title">query_string</span>;</span></span><br><span class="line"> </span><br><span class="line">  <span class="comment">/* Headers */</span></span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">mg_str</span> <span class="title">header_names</span>[<span class="title">MG_MAX_HTTP_HEADERS</span>];</span></span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">mg_str</span> <span class="title">header_values</span>[<span class="title">MG_MAX_HTTP_HEADERS</span>];</span></span><br><span class="line">&#125;;<span class="comment">///HTTP消息</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">websocket_message</span> &#123;</span></span><br><span class="line">  <span class="keyword">unsigned</span> <span class="keyword">char</span> *data;</span><br><span class="line">  <span class="keyword">size_t</span> size;</span><br><span class="line">  <span class="keyword">unsigned</span> <span class="keyword">char</span> flags;</span><br><span class="line">&#125;;<span class="comment">///websocket消息</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">mg_http_multipart_part</span> &#123;</span></span><br><span class="line">  <span class="keyword">const</span> <span class="keyword">char</span> *file_name;</span><br><span class="line">  <span class="keyword">const</span> <span class="keyword">char</span> *var_name;</span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">mg_str</span> <span class="title">data</span>;</span></span><br><span class="line">  <span class="keyword">int</span> status; <span class="comment">/* &lt;0 on error */</span></span><br><span class="line">  <span class="keyword">void</span> *user_data;</span><br><span class="line">&#125;;<span class="comment">///HTTP分包部分</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">mg_ssi_call_ctx</span> &#123;</span></span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">http_message</span> *<span class="title">req</span>;</span> <span class="comment">/* The request being processed. */</span></span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">mg_str</span> <span class="title">file</span>;</span>       <span class="comment">/* Filesystem path of the file being processed. */</span></span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">mg_str</span> <span class="title">arg</span>;</span> <span class="comment">/* The argument passed to the tag: &lt;!-- call arg --&gt;. */</span></span><br><span class="line">&#125;;<span class="comment">///SSI调用上下文</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">mg_set_protocol_http_websocket</span><span class="params">(struct mg_connection *nc)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">mg_send_websocket_handshake</span><span class="params">(struct mg_connection *nc, <span class="keyword">const</span> <span class="keyword">char</span> *uri,</span></span></span><br><span class="line"><span class="params"><span class="function">                                 <span class="keyword">const</span> <span class="keyword">char</span> *extra_headers)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">mg_send_websocket_handshake2</span><span class="params">(struct mg_connection *nc, <span class="keyword">const</span> <span class="keyword">char</span> *path,</span></span></span><br><span class="line"><span class="params"><span class="function">                                  <span class="keyword">const</span> <span class="keyword">char</span> *host, <span class="keyword">const</span> <span class="keyword">char</span> *protocol,</span></span></span><br><span class="line"><span class="params"><span class="function">                                  <span class="keyword">const</span> <span class="keyword">char</span> *extra_headers)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">mg_send_websocket_handshake3</span><span class="params">(struct mg_connection *nc, <span class="keyword">const</span> <span class="keyword">char</span> *path,</span></span></span><br><span class="line"><span class="params"><span class="function">                                  <span class="keyword">const</span> <span class="keyword">char</span> *host, <span class="keyword">const</span> <span class="keyword">char</span> *protocol,</span></span></span><br><span class="line"><span class="params"><span class="function">                                  <span class="keyword">const</span> <span class="keyword">char</span> *extra_headers, <span class="keyword">const</span> <span class="keyword">char</span> *user,</span></span></span><br><span class="line"><span class="params"><span class="function">                                  <span class="keyword">const</span> <span class="keyword">char</span> *pass)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">mg_send_websocket_handshake3v</span><span class="params">(struct mg_connection *nc,</span></span></span><br><span class="line"><span class="params"><span class="function">                                   <span class="keyword">const</span> struct mg_str path,</span></span></span><br><span class="line"><span class="params"><span class="function">                                   <span class="keyword">const</span> struct mg_str host,</span></span></span><br><span class="line"><span class="params"><span class="function">                                   <span class="keyword">const</span> struct mg_str protocol,</span></span></span><br><span class="line"><span class="params"><span class="function">                                   <span class="keyword">const</span> struct mg_str extra_headers,</span></span></span><br><span class="line"><span class="params"><span class="function">                                   <span class="keyword">const</span> struct mg_str user,</span></span></span><br><span class="line"><span class="params"><span class="function">                                   <span class="keyword">const</span> struct mg_str pass)</span></span>;</span><br><span class="line"><span class="function">struct mg_connection *<span class="title">mg_connect_ws</span><span class="params">(struct mg_mgr *mgr,</span></span></span><br><span class="line"><span class="params"><span class="function">                                    MG_CB(<span class="keyword">mg_event_handler_t</span> event_handler,</span></span></span><br><span class="line"><span class="params"><span class="function">                                          <span class="keyword">void</span> *user_data),</span></span></span><br><span class="line"><span class="params"><span class="function">                                    <span class="keyword">const</span> <span class="keyword">char</span> *url, <span class="keyword">const</span> <span class="keyword">char</span> *protocol,</span></span></span><br><span class="line"><span class="params"><span class="function">                                    <span class="keyword">const</span> <span class="keyword">char</span> *extra_headers)</span></span>;</span><br><span class="line"><span class="function">struct mg_connection *<span class="title">mg_connect_ws_opt</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">    struct mg_mgr *mgr, MG_CB(<span class="keyword">mg_event_handler_t</span> ev_handler, <span class="keyword">void</span> *user_data),</span></span></span><br><span class="line"><span class="params"><span class="function">    struct mg_connect_opts opts, <span class="keyword">const</span> <span class="keyword">char</span> *url, <span class="keyword">const</span> <span class="keyword">char</span> *protocol,</span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="keyword">const</span> <span class="keyword">char</span> *extra_headers)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">mg_send_websocket_frame</span><span class="params">(struct mg_connection *nc, <span class="keyword">int</span> op_and_flags,</span></span></span><br><span class="line"><span class="params"><span class="function">                             <span class="keyword">const</span> <span class="keyword">void</span> *data, <span class="keyword">size_t</span> data_len)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">mg_send_websocket_framev</span><span class="params">(struct mg_connection *nc, <span class="keyword">int</span> op_and_flags,</span></span></span><br><span class="line"><span class="params"><span class="function">                              <span class="keyword">const</span> struct mg_str *strings, <span class="keyword">int</span> num_strings)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">mg_printf_websocket_frame</span><span class="params">(struct mg_connection *nc, <span class="keyword">int</span> op_and_flags,</span></span></span><br><span class="line"><span class="params"><span class="function">                               <span class="keyword">const</span> <span class="keyword">char</span> *fmt, ...)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">mg_url_decode</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span> *src, <span class="keyword">int</span> src_len, <span class="keyword">char</span> *dst, <span class="keyword">int</span> dst_len,</span></span></span><br><span class="line"><span class="params"><span class="function">                  <span class="keyword">int</span> is_form_url_encoded)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">extern</span> <span class="keyword">void</span> <span class="title">mg_hash_md5_v</span><span class="params">(<span class="keyword">size_t</span> num_msgs, <span class="keyword">const</span> <span class="keyword">uint8_t</span> *msgs[],</span></span></span><br><span class="line"><span class="params"><span class="function">                          <span class="keyword">const</span> <span class="keyword">size_t</span> *msg_lens, <span class="keyword">uint8_t</span> *digest)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">extern</span> <span class="keyword">void</span> <span class="title">mg_hash_sha1_v</span><span class="params">(<span class="keyword">size_t</span> num_msgs, <span class="keyword">const</span> <span class="keyword">uint8_t</span> *msgs[],</span></span></span><br><span class="line"><span class="params"><span class="function">                           <span class="keyword">const</span> <span class="keyword">size_t</span> *msg_lens, <span class="keyword">uint8_t</span> *digest)</span></span>;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="HTTP-Server端API"><a href="#HTTP-Server端API" class="headerlink" title="HTTP Server端API"></a>HTTP Server端API</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">mg_parse_http</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span> *s, <span class="keyword">int</span> n, struct http_message *hm, <span class="keyword">int</span> is_req)</span></span>;</span><br><span class="line"><span class="comment">/**解析http消息，如果is_req=1 此消息是http请求，is_req=0 此消息是http回应</span></span><br><span class="line"><span class="comment"> *返回解析的字节数 如果http消息不完整则返回0 如果解析出错，则返回负数*/</span></span><br><span class="line"><span class="function">struct mg_str *<span class="title">mg_get_http_header</span><span class="params">(struct http_message *hm, <span class="keyword">const</span> <span class="keyword">char</span> *name)</span></span>;</span><br><span class="line"><span class="comment">/**搜索并返回解析后的http消息hm中的表头名称，如果没有找到标头，则返回NULL</span></span><br><span class="line"><span class="comment"> *实例：struct mg_str *host_hdr = mg_get_http_header(hm, &quot;Host&quot;);*/</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">mg_http_parse_header</span><span class="params">(struct mg_str *hdr, <span class="keyword">const</span> <span class="keyword">char</span> *var_name, <span class="keyword">char</span> *buf,</span></span></span><br><span class="line"><span class="params"><span class="function">                         <span class="keyword">size_t</span> buf_size)</span></span>;</span><br><span class="line"><span class="comment">/**解析http头hdr,查找变量var_name并将其值存储到buf中，如果没有找到变量，返回0否则返回非0。此函数用于解析cookies验证头等。如果成功则返回变量值的长度，如果buf缓冲区不够大，或者没有找到此变量则返回0</span></span><br><span class="line"><span class="comment">char user[20];</span></span><br><span class="line"><span class="comment">struct mg_str *hdr = mg_get_http_header(hm, &quot;Authorization&quot;);</span></span><br><span class="line"><span class="comment">mg_http_parse_header(hdr, &quot;username&quot;, user, sizeof(user));</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">mg_get_http_basic_auth</span><span class="params">(struct http_message *hm, <span class="keyword">char</span> *user, <span class="keyword">size_t</span> user_len,</span></span></span><br><span class="line"><span class="params"><span class="function">                           <span class="keyword">char</span> *pass, <span class="keyword">size_t</span> pass_len)</span></span>;</span><br><span class="line"><span class="comment">/*获取并解析授权，如果没有找到授权头或者mg_parse_http_basic_auth解析结果头失败*/</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">mg_parse_http_basic_auth</span><span class="params">(struct mg_str *hdr, <span class="keyword">char</span> *user, <span class="keyword">size_t</span> user_len,</span></span></span><br><span class="line"><span class="params"><span class="function">                             <span class="keyword">char</span> *pass, <span class="keyword">size_t</span> pass_len)</span></span>;</span><br><span class="line"><span class="comment">/*解析授权,如授权类型不是Basic或者出现其他错误(如用于base64编码的用户密码不对)基本头返回-1*/</span></span><br><span class="line"><span class="function"><span class="keyword">size_t</span> <span class="title">mg_parse_multipart</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span> *buf, <span class="keyword">size_t</span> buf_len, <span class="keyword">char</span> *var_name,</span></span></span><br><span class="line"><span class="params"><span class="function">                          <span class="keyword">size_t</span> var_name_len, <span class="keyword">char</span> *file_name,</span></span></span><br><span class="line"><span class="params"><span class="function">                          <span class="keyword">size_t</span> file_name_len, <span class="keyword">const</span> <span class="keyword">char</span> **chunk,</span></span></span><br><span class="line"><span class="params"><span class="function">                          <span class="keyword">size_t</span> *chunk_len)</span></span>;</span><br><span class="line"><span class="comment">/*解析包含多部分表单数据库的缓冲区buf,buf_len,将块名存储在var_name,var_name_len缓冲区中。如果块是上传文件，那么file_name,file_name_len将会被一个上传的文件名填充。chunk,chunk_len指向块数据。返回要跳到下一个块的字节数，如果没有更多块则返回0*/</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">mg_get_http_var</span><span class="params">(<span class="keyword">const</span> struct mg_str *buf, <span class="keyword">const</span> <span class="keyword">char</span> *name, <span class="keyword">char</span> *dst,</span></span></span><br><span class="line"><span class="params"><span class="function">                    <span class="keyword">size_t</span> dst_len)</span></span>;</span><br><span class="line"><span class="comment">/*获取Http表单变量。从buf获取变量名，到指定dst指定长度dst_len的缓冲区。目的地址总是0终止，返回获取到的变量的长度，如果没有找到变量，则返回0.buf必须是有效的url编码缓冲区。如果dst长度太小或者发生错误返回负数*/</span></span><br><span class="line"> </span><br><span class="line"><span class="comment">//此结构定义了mg_serve_http()的工作方式，最佳是设置需要的，其余为NULL</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">mg_serve_http_opts</span> &#123;</span></span><br><span class="line">  <span class="keyword">const</span> <span class="keyword">char</span> *document_root;<span class="comment">///web根目录路径</span></span><br><span class="line">  <span class="keyword">const</span> <span class="keyword">char</span> *index_files;<span class="comment">///索引文件列表，默认是&quot;&quot;</span></span><br><span class="line">  <span class="comment">/*</span></span><br><span class="line"><span class="comment">  per_directory_auth_file =NULL表示禁用身份验证</span></span><br><span class="line"><span class="comment">  per_directory_auth_file =&quot;.htpasswd&quot; 要使用身份认证来保护目录，然后在任何目录创建使用                                 digest认证的.htpasswd文件。使用mongoose web服务器二进制文件或                             者Apache的htpasswd实例创建/操作密码文件</span></span><br><span class="line"><span class="comment">                             确保auth_domain是一个有效的域</span></span><br><span class="line"><span class="comment">  */</span></span><br><span class="line">  <span class="keyword">const</span> <span class="keyword">char</span> *per_directory_auth_file;</span><br><span class="line">  <span class="keyword">const</span> <span class="keyword">char</span> *auth_domain;<span class="comment">//授权域。即web服务器的域名</span></span><br><span class="line">  <span class="comment">/*</span></span><br><span class="line"><span class="comment">      global_auth_file = NULL 禁用身份认证</span></span><br><span class="line"><span class="comment">      通常只保护document_root根目录选定的目录。如果对web服务器的所有访问都必须经过身份验证，       不管URI是什么，将此选项设置为密码文件的路径。此文件的格式与.htpasswd的格式一样，并把此        文件放在document_root根目录之外，以防他人获取到此文件</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  <span class="keyword">const</span> <span class="keyword">char</span> *global_auth_file;</span><br><span class="line">  <span class="keyword">const</span> <span class="keyword">char</span> *enable_directory_listing;<span class="comment">//设置为&quot;no&quot;禁用目录列表，默认启用</span></span><br><span class="line">  <span class="keyword">const</span> <span class="keyword">char</span> *ssi_pattern;<span class="comment">///ssi匹配模式  源码有详细介绍</span></span><br><span class="line">  <span class="keyword">const</span> <span class="keyword">char</span> *ip_acl;<span class="comment">///ip_acl=NULL表示所有IP都可链接</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">if</span> MG_ENABLE_HTTP_URL_REWRITES</span></span><br><span class="line">      <span class="keyword">const</span> <span class="keyword">char</span> *url_rewrites;/源码有详细介绍</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line">  <span class="keyword">const</span> <span class="keyword">char</span> *dav_document_root;<span class="comment">///DAV的根目录,dav_document_root=NULL 则DAV请求失败</span></span><br><span class="line">  <span class="keyword">const</span> <span class="keyword">char</span> *dav_auth_file;<span class="comment">//DAV密码文件，dav_auth_file=NULL 则DAV请求失败 dav_auth_file=&quot;-&quot; 禁用DAV鉴权</span></span><br><span class="line">  <span class="keyword">const</span> <span class="keyword">char</span> *hidden_file_pattern;<span class="comment">///文件隐藏的Glob模式</span></span><br><span class="line">  <span class="keyword">const</span> <span class="keyword">char</span> *cgi_file_pattern;<span class="comment">///cgi_file_pattern != NULL 则使能cgi，即此目录下满足 **.cgi$|**.php$&quot;都视为cgi文件</span></span><br><span class="line">  <span class="keyword">const</span> <span class="keyword">char</span> *cgi_interpreter;<span class="comment">///如果不是NULL，请忽略CGI脚本hashbang并使用这个解释器</span></span><br><span class="line">  <span class="keyword">const</span> <span class="keyword">char</span> *custom_mime_types;</span><br><span class="line"><span class="comment">/*Comma-separated list of Content-Type overrides for path suffixes,&quot;.txt=text/plain; charset=utf-8,.c=text/plain&quot;e.g.*/</span></span><br><span class="line">  <span class="keyword">const</span> <span class="keyword">char</span> *extra_headers;<span class="comment">///添加到每个http相应的额外的header,要启用CORS，请将此设置为&quot;Access-Control-Allow-Origin: *&quot;。</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">mg_serve_http</span><span class="params">(struct mg_connection *nc, struct http_message *hm,</span></span></span><br><span class="line"><span class="params"><span class="function">                   struct mg_serve_http_opts opts)</span></span>;</span><br><span class="line"><span class="comment">/*根据opts的内容，提供特定的http请求*/</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">mg_http_serve_file</span><span class="params">(struct mg_connection *nc, struct http_message *hm,</span></span></span><br><span class="line"><span class="params"><span class="function">                        <span class="keyword">const</span> <span class="keyword">char</span> *path, <span class="keyword">const</span> struct mg_str mime_type,</span></span></span><br><span class="line"><span class="params"><span class="function">                        <span class="keyword">const</span> struct mg_str extra_headers)</span></span>;</span><br><span class="line"><span class="comment">/*提供具有给定MIME类型和可选extra_headers头的特定文件*/</span></span><br><span class="line"><span class="function"><span class="keyword">typedef</span> struct <span class="title">mg_str</span> <span class="params">(*mg_fu_fname_fn)</span><span class="params">(struct mg_connection *nc,</span></span></span><br><span class="line"><span class="params"><span class="function">                                        struct mg_str fname)</span></span>;<span class="comment">///mg_file_upload_handler()的回调函数原型</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">mg_file_upload_handler</span><span class="params">(struct mg_connection *nc, <span class="keyword">int</span> ev, <span class="keyword">void</span> *ev_data,</span></span></span><br><span class="line"><span class="params"><span class="function">                            mg_fu_fname_fn local_name_fn</span></span></span><br><span class="line"><span class="params"><span class="function">                                MG_UD_ARG(<span class="keyword">void</span> *user_data))</span></span>;</span><br><span class="line"><span class="comment">/*文件上传处理程序。这个处理程序可以用最少的代码实现文件上传.此程序处理MG_EV_HTTPPART事件并保存文件数据到本地。local_name_fn将以客户端提供的名字调用并以期望的本地文件名称打开。如果返回NULL将终止文件上传(客户端得到403)，如果返回不是NULL,返回的字符串必须是堆分配的，且调用方需要释放这些字符串。异常情况：返回完全相同的字符串，</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">mg_register_http_endpoint</span><span class="params">(struct mg_connection *nc, <span class="keyword">const</span> <span class="keyword">char</span> *uri_path,</span></span></span><br><span class="line"><span class="params"><span class="function">                               MG_CB(<span class="keyword">mg_event_handler_t</span> handler,</span></span></span><br><span class="line"><span class="params"><span class="function">                                     <span class="keyword">void</span> *user_data))</span></span>;</span><br><span class="line"><span class="comment">/*为nc注册回调函数，如果注册了回调函数，其会被调用欧冠，而不是调用mg_bind()中提供的回调函数*/</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">mg_http_endpoint_opts</span> &#123;</span></span><br><span class="line">  <span class="keyword">void</span> *user_data;</span><br><span class="line">  <span class="comment">/*授权域 (realm) */</span></span><br><span class="line">  <span class="keyword">const</span> <span class="keyword">char</span> *auth_domain;</span><br><span class="line">  <span class="keyword">const</span> <span class="keyword">char</span> *auth_file;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">mg_register_http_endpoint_opt</span><span class="params">(struct mg_connection *nc,</span></span></span><br><span class="line"><span class="params"><span class="function">                                   <span class="keyword">const</span> <span class="keyword">char</span> *uri_path,</span></span></span><br><span class="line"><span class="params"><span class="function">                                   <span class="keyword">mg_event_handler_t</span> handler,</span></span></span><br><span class="line"><span class="params"><span class="function">                                   struct mg_http_endpoint_opts opts)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">mg_http_check_digest_auth</span><span class="params">(struct http_message *hm, <span class="keyword">const</span> <span class="keyword">char</span> *auth_domain,</span></span></span><br><span class="line"><span class="params"><span class="function">                              FILE *fp)</span></span>;</span><br><span class="line"><span class="comment">/*根据打开的密码文件验证HTTP请求。如果经过身份验证，返回1，否则返回0*/</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">mg_check_digest_auth</span><span class="params">(struct mg_str method, struct mg_str uri,</span></span></span><br><span class="line"><span class="params"><span class="function">                         struct mg_str username, struct mg_str cnonce,</span></span></span><br><span class="line"><span class="params"><span class="function">                         struct mg_str response, struct mg_str qop,</span></span></span><br><span class="line"><span class="params"><span class="function">                         struct mg_str nc, struct mg_str nonce,</span></span></span><br><span class="line"><span class="params"><span class="function">                         struct mg_str auth_domain, FILE *fp)</span></span>;</span><br><span class="line"><span class="comment">/*对打开的密码文件验证给定的响应参数。如果经过身份验证，返回1，否则返回0。</span></span><br><span class="line"><span class="comment">由 mg_http_check_digest_auth().调用</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">mg_send_http_chunk</span><span class="params">(struct mg_connection *nc, <span class="keyword">const</span> <span class="keyword">char</span> *buf, <span class="keyword">size_t</span> len)</span></span>;</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">使用组块HTTP编码向客户端发送大小为len的缓冲区buf.这个函数首先将  发送缓冲区大小(16进制)+换行符+缓冲区+换行符发出。例如，mg_send_http_chunk(nc，“foo”，3)将把 &quot;3\r\nfoo\r\n&quot;字符串追加到nc-&gt;send_mbuf输出IO缓冲区</span></span><br><span class="line"><span class="comment">HTTP头“传输编码:块化”应该在使用此函数之前发送</span></span><br><span class="line"><span class="comment">不要忘记在响应结束时发送一个空块，告诉客户端所有内容都已发送</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">mg_printf_http_chunk</span><span class="params">(struct mg_connection *nc, <span class="keyword">const</span> <span class="keyword">char</span> *fmt, ...)</span></span>;</span><br><span class="line"><span class="comment">/*发送一个printf格式的HTTP块。功能类似于mg_send_http_chunk()。*/</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">mg_send_response_line</span><span class="params">(struct mg_connection *nc, <span class="keyword">int</span> status_code,</span></span></span><br><span class="line"><span class="params"><span class="function">                           <span class="keyword">const</span> <span class="keyword">char</span> *extra_headers)</span></span>;</span><br><span class="line"><span class="comment">/*发送响应状态行。如果extra_headers不是NULL，那么extra_headers也会在响应行之后发送。extra_headers不能以新行结束*/</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">mg_http_send_error</span><span class="params">(struct mg_connection *nc, <span class="keyword">int</span> code, <span class="keyword">const</span> <span class="keyword">char</span> *reason)</span></span>;</span><br><span class="line"><span class="comment">/*发送一个错误的回应。如果原因为空，消息将从错误代码中推断出来(如果支持的话)*/</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">mg_http_send_redirect</span><span class="params">(struct mg_connection *nc, <span class="keyword">int</span> status_code,</span></span></span><br><span class="line"><span class="params"><span class="function">                           <span class="keyword">const</span> struct mg_str location,</span></span></span><br><span class="line"><span class="params"><span class="function">                           <span class="keyword">const</span> struct mg_str extra_headers)</span></span>;</span><br><span class="line"><span class="comment">/*发送一个重定向响应。status_code应该是301或302，位置指向新位置。如果extra_headers不是空的，那么extra_headers也会在响应行之后发送。extra_headers不能以新行结束。*/</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">mg_send_head</span><span class="params">(struct mg_connection *n, <span class="keyword">int</span> status_code,</span></span></span><br><span class="line"><span class="params"><span class="function">                  <span class="keyword">int64_t</span> content_length, <span class="keyword">const</span> <span class="keyword">char</span> *extra_headers)</span></span>;</span><br><span class="line"><span class="comment">/*发送响应行和标题。这个函数用status_code发送响应行，并自动发送一个标题:&quot;Content-Length&quot;或 &quot;Transfer-Encoding&quot;。如果content_length为负，则发送“Transfer-Encoding: chunked”报头，否则发送“Content-Length”报头。如果转换编码被分割，那么消息体必须使用mg_send_http_chunk()或mg_printf_http_chunk()函数发送。否则，必须使用mg_send()或mg_printf()。额外的标题可以通过extra_headers设置。注意，extra_headers不能被一个新的行终止*/</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">mg_printf_html_escape</span><span class="params">(struct mg_connection *nc, <span class="keyword">const</span> <span class="keyword">char</span> *fmt, ...)</span></span>;</span><br><span class="line"><span class="comment">/*发送一个打印格式的HTTP块，转义HTML标记*/</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">mg_http_reverse_proxy</span><span class="params">(struct mg_connection *nc,</span></span></span><br><span class="line"><span class="params"><span class="function">                           <span class="keyword">const</span> struct http_message *hm, struct mg_str mount,</span></span></span><br><span class="line"><span class="params"><span class="function">                           struct mg_str upstream)</span></span>;</span><br><span class="line"><span class="comment">/*将给定的请求代理给给定的上游http服务器.挂载中的路径前缀将被剥离到上游服务器请求的路径，例如如果挂载为/api，上游为 http://localhost:8001/foo 那么向/api传入的请求将传入到 http://localhost:8001/foo/bar*/</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="HTTP-Client端API"><a href="#HTTP-Client端API" class="headerlink" title="HTTP Client端API"></a>HTTP Client端API</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function">struct mg_connection *<span class="title">mg_connect_http</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">    struct mg_mgr *mgr,</span></span></span><br><span class="line"><span class="params"><span class="function">    MG_CB(<span class="keyword">mg_event_handler_t</span> event_handler, <span class="keyword">void</span> *user_data), <span class="keyword">const</span> <span class="keyword">char</span> *url,</span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="keyword">const</span> <span class="keyword">char</span> *extra_headers, <span class="keyword">const</span> <span class="keyword">char</span> *post_data)</span></span>;</span><br><span class="line"><span class="comment">/*创建出站HTTP连接的助手函数</span></span><br><span class="line"><span class="comment">url是要获取的url。它必须被正确地url编码，例如没有空格，等等.默认情况下，mg_connect_http()发送连接和主机头</span></span><br><span class="line"><span class="comment">extra_headers是一个额外的HTTP头:&quot;User-Agent: my-app\r\n&quot;</span></span><br><span class="line"><span class="comment">如果post_data为空，则创建一个GET请求。否则，将使用指定的POST数据创建POST请求。</span></span><br><span class="line"><span class="comment">注意，如果要提交的数据是表单提交，那么应该相应地设置Content-Type报头(参见下面的示例)。</span></span><br><span class="line"><span class="comment">nc1 = mg_connect_http(mgr, ev_handler_1, &quot;http://www.google.com&amp;quot;, NULL,</span></span><br><span class="line"><span class="comment">                        NULL);</span></span><br><span class="line"><span class="comment">nc2 = mg_connect_http(mgr, ev_handler_1, &quot;https://github.com&amp;quot;, NULL, NULL);</span></span><br><span class="line"><span class="comment">nc3 = mg_connect_http(</span></span><br><span class="line"><span class="comment">      mgr, ev_handler_1, &quot;my_server:8000/form_submit/&quot;,</span></span><br><span class="line"><span class="comment">      &quot;Content-Type: application/x-www-form-urlencoded\r\n&quot;,</span></span><br><span class="line"><span class="comment">      &quot;var_1=value_1&amp;var_2=value_2&quot;);</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function">struct mg_connection *<span class="title">mg_connect_http_opt</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">    struct mg_mgr *mgr, MG_CB(<span class="keyword">mg_event_handler_t</span> ev_handler, <span class="keyword">void</span> *user_data),</span></span></span><br><span class="line"><span class="params"><span class="function">    struct mg_connect_opts opts, <span class="keyword">const</span> <span class="keyword">char</span> *url, <span class="keyword">const</span> <span class="keyword">char</span> *extra_headers,</span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="keyword">const</span> <span class="keyword">char</span> *post_data)</span></span>;</span><br><span class="line"><span class="comment">/*创建出站HTTP连接的助手函数.与mg_connect_http基本相同，但允许提供额外的参数(例如SSL参数)*/</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">mg_http_create_digest_auth_header</span><span class="params">(<span class="keyword">char</span> *buf, <span class="keyword">size_t</span> buf_len,</span></span></span><br><span class="line"><span class="params"><span class="function">                                      <span class="keyword">const</span> <span class="keyword">char</span> *method, <span class="keyword">const</span> <span class="keyword">char</span> *uri,</span></span></span><br><span class="line"><span class="params"><span class="function">                                      <span class="keyword">const</span> <span class="keyword">char</span> *auth_domain, <span class="keyword">const</span> <span class="keyword">char</span> *user,</span></span></span><br><span class="line"><span class="params"><span class="function">                                      <span class="keyword">const</span> <span class="keyword">char</span> *passwd)</span></span>;</span><br><span class="line"><span class="comment">/*为客户机请求创建摘要身份验证头*/</span></span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/mongoose/" rel="tag"><i class="fa fa-tag"></i> mongoose</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/06/22/LeetCode/leetcode-837/" rel="prev" title="LeetCode - 837.新21点">
+      <i class="fa fa-chevron-left"></i> LeetCode - 837.新21点
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%9A%E7%94%A8API"><span class="nav-number">1.</span> <span class="nav-text">通用API</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HTTP-Server%E7%AB%AFAPI"><span class="nav-number">2.</span> <span class="nav-text">HTTP Server端API</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HTTP-Client%E7%AB%AFAPI"><span class="nav-number">3.</span> <span class="nav-text">HTTP Client端API</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="pen22"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">pen22</p>
+  <div class="site-description" itemprop="description">Computer Lover</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">10</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/chirsilver" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;chirsilver" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:chirsisokk@outlook.com" title="E-Mail → mailto:chirsisokk@outlook.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">pen22</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-pjax@0/pjax.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+          load: ['[tex]/mhchem'],
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+          packages: {'[+]': ['mhchem']},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//cdnjs.cloudflare.com/ajax/libs/valine/1.3.10/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = '绰号,邮箱,网址(可不填)';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : true,
+      notify     : true,
+      appId      : 'xvMQcHiAJUo9cHVgVHUbCvD9-gzGzoHsz',
+      appKey     : 'GtD01vPhtdBVwyeYbuWBwYPX',
+      placeholder: "快来说点啥吧~~",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '20' || 10,
+      visitor    : true,
+      lang       : 'zh-cn' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+    </div>
+</body>
+</html>
