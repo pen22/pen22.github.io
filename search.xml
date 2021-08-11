@@ -886,10 +886,10 @@
     <title>Sqlite3 C/C++</title>
     <url>/2021/08/11/Sqlite3-C-C/</url>
     <content><![CDATA[<h1 id="SQLite-C-C"><a href="#SQLite-C-C" class="headerlink" title="SQLite - C/C++"></a>SQLite - C/C++</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>本文是简单的sqlite3 c++ 接口应用，源自[菜鸟教程](<a href="https://www.runoob.com/sqlite/sqlite-c-cpp.html">SQLite – C/C++ | 菜鸟教程 (runoob.com)</a>)，以便查询</p>
-<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p>在 C/C++ 程序中使用 SQLite 之前，我们需要确保机器上已经有 SQLite 库。可以查看 SQLite 安装章节了解安装过程。</p>
-<h2 id="C-C-接口-API"><a href="#C-C-接口-API" class="headerlink" title="C/C++ 接口 API"></a>C/C++ 接口 API</h2><p>以下是重要的 C&amp;C++ / SQLite 接口程序，可以满足您在 C/C++ 程序中使用 SQLite 数据库的需求。如果您需要了解更多细节，请查看 SQLite 官方文档。</p>
 <span id="more"></span>
 
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p>在 C/C++ 程序中使用 SQLite 之前，我们需要确保机器上已经有 SQLite 库。可以查看 SQLite 安装章节了解安装过程。</p>
+<h2 id="C-C-接口-API"><a href="#C-C-接口-API" class="headerlink" title="C/C++ 接口 API"></a>C/C++ 接口 API</h2><p>以下是重要的 C&amp;C++ / SQLite 接口程序，可以满足您在 C/C++ 程序中使用 SQLite 数据库的需求。如果您需要了解更多细节，请查看 SQLite 官方文档。</p>
 <table>
 <thead>
 <tr>
