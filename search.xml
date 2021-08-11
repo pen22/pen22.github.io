@@ -966,7 +966,10 @@
   <entry>
     <title>Sqlite3 简单使用</title>
     <url>/2021/08/11/Sqlite3-%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8/</url>
-    <content><![CDATA[<h3 id="创建数据库"><a href="#创建数据库" class="headerlink" title="创建数据库"></a>创建数据库</h3><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">$ sqlite3 database_name.db</span><br><span class="line">或者</span><br><span class="line">sqlite<span class="operator">&gt;</span> .<span class="keyword">open</span> database_name.db</span><br></pre></td></tr></table></figure>
+    <content><![CDATA[<h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>本文介绍一些常用Sqlite3 命令行。</p>
+<span id="more"></span>
+
+<h3 id="创建数据库"><a href="#创建数据库" class="headerlink" title="创建数据库"></a>创建数据库</h3><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">$ sqlite3 database_name.db</span><br><span class="line">或者</span><br><span class="line">sqlite<span class="operator">&gt;</span> .<span class="keyword">open</span> database_name.db</span><br></pre></td></tr></table></figure>
 
 <h3 id="附加数据库"><a href="#附加数据库" class="headerlink" title="附加数据库"></a>附加数据库</h3><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">ATTACH DATABASE <span class="string">&#x27;file_name&#x27;</span> <span class="keyword">AS</span> <span class="string">&#x27;alias_name&#x27;</span>;</span><br></pre></td></tr></table></figure>
 
