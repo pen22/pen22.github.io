@@ -882,4 +882,367 @@
         <tag>Git 学习</tag>
       </tags>
   </entry>
+  <entry>
+    <title>Sqlite3 C/C++</title>
+    <url>/2021/08/11/Sqlite3-C-C/</url>
+    <content><![CDATA[<h1 id="SQLite-C-C"><a href="#SQLite-C-C" class="headerlink" title="SQLite - C/C++"></a>SQLite - C/C++</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>本文是简单的sqlite3 c++ 接口应用，源自[菜鸟教程](<a href="https://www.runoob.com/sqlite/sqlite-c-cpp.html">SQLite – C/C++ | 菜鸟教程 (runoob.com)</a>)，以便查询</p>
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p>在 C/C++ 程序中使用 SQLite 之前，我们需要确保机器上已经有 SQLite 库。可以查看 SQLite 安装章节了解安装过程。</p>
+<h2 id="C-C-接口-API"><a href="#C-C-接口-API" class="headerlink" title="C/C++ 接口 API"></a>C/C++ 接口 API</h2><p>以下是重要的 C&amp;C++ / SQLite 接口程序，可以满足您在 C/C++ 程序中使用 SQLite 数据库的需求。如果您需要了解更多细节，请查看 SQLite 官方文档。</p>
+<span id="more"></span>
+
+<table>
+<thead>
+<tr>
+<th align="left">序号</th>
+<th align="left">API &amp; 描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">1</td>
+<td align="left">*<em>sqlite3_open(const char *filename, sqlite3 *<em>ppDb)</em></em> 该例程打开一个指向 SQLite 数据库文件的连接，返回一个用于其他 SQLite 程序的数据库连接对象。如果 <em>filename</em> 参数是 NULL 或 ‘:memory:’，那么 sqlite3_open() 将会在 RAM 中创建一个内存数据库，这只会在 session 的有效时间内持续。如果文件名 filename 不为 NULL，那么 sqlite3_open() 将使用这个参数值尝试打开数据库文件。如果该名称的文件不存在，sqlite3_open() 将创建一个新的命名为该名称的数据库文件并打开。</td>
+</tr>
+<tr>
+<td align="left">2</td>
+<td align="left"><strong>sqlite3_exec(sqlite3*, const char *sql, sqlite_callback, void *data, char * errmsg)</strong> 该例程提供了一个执行 SQL 命令的快捷方式，SQL 命令由 sql 参数提供，可以由多个 SQL 命令组成。在这里，第一个参数 <em>sqlite3</em> 是打开的数据库对象，<em>sqlite_callback</em> 是一个回调，<em>data</em> 作为其第一个参数，errmsg 将被返回用来获取程序生成的任何错误。sqlite3_exec() 程序解析并执行由 <strong>sql</strong> 参数所给的每个命令，直到字符串结束或者遇到错误为止。</td>
+</tr>
+<tr>
+<td align="left">3</td>
+<td align="left"><strong>sqlite3_close(sqlite3*)</strong> 该例程关闭之前调用 sqlite3_open() 打开的数据库连接。所有与连接相关的语句都应在连接关闭之前完成。如果还有查询没有完成，sqlite3_close() 将返回 SQLITE_BUSY 禁止关闭的错误消息。</td>
+</tr>
+</tbody></table>
+<h2 id="连接数据库"><a href="#连接数据库" class="headerlink" title="连接数据库"></a>连接数据库</h2><p>下面的 C 代码段显示了如何连接到一个现有的数据库。如果数据库不存在，那么它就会被创建，最后将返回一个数据库对象。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sqlite3.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span>* argv[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">   sqlite3 *db;</span><br><span class="line">   <span class="keyword">char</span> *zErrMsg = <span class="number">0</span>;</span><br><span class="line">   <span class="keyword">int</span> rc;</span><br><span class="line"></span><br><span class="line">   rc = <span class="built_in">sqlite3_open</span>(<span class="string">&quot;test.db&quot;</span>, &amp;db);</span><br><span class="line"></span><br><span class="line">   <span class="keyword">if</span>( rc )&#123;</span><br><span class="line">      <span class="built_in">fprintf</span>(stderr, <span class="string">&quot;Can&#x27;t open database: %s\n&quot;</span>, <span class="built_in">sqlite3_errmsg</span>(db));</span><br><span class="line">      <span class="built_in">exit</span>(<span class="number">0</span>);</span><br><span class="line">   &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">      <span class="built_in">fprintf</span>(stderr, <span class="string">&quot;Opened database successfully\n&quot;</span>);</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="built_in">sqlite3_close</span>(db);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>现在，让我们来编译和运行上面的程序，在当前目录中创建我们的数据库 <strong>test.db</strong>。您可以根据需要改变路径。</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="variable">$gcc</span> test.c -l sqlite3</span><br><span class="line">$./a.out</span><br><span class="line">Opened database successfully</span><br></pre></td></tr></table></figure>
+
+<p>如果要使用 C++ 源代码，可以按照下列所示编译代码：</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="variable">$g</span>++ test.c -l sqlite3</span><br></pre></td></tr></table></figure>
+
+<p>在这里，把我们的程序链接上 sqlite3 库，以便向 C 程序提供必要的函数。这将在您的目录下创建一个数据库文件 test.db，您将得到如下结果：</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">-rwxr-xr-x. 1 root root 7383 May  8 02:06 a.out</span><br><span class="line">-rw-r--r--. 1 root root  323 May  8 02:05 test.c</span><br><span class="line">-rw-r--r--. 1 root root    0 May  8 02:06 test.db</span><br></pre></td></tr></table></figure>
+
+<h2 id="创建表"><a href="#创建表" class="headerlink" title="创建表"></a>创建表</h2><p>下面的 C 代码段将用于在先前创建的数据库中创建一个表：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sqlite3.h&gt;</span> </span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">callback</span><span class="params">(<span class="keyword">void</span> *NotUsed, <span class="keyword">int</span> argc, <span class="keyword">char</span> **argv, <span class="keyword">char</span> **azColName)</span></span>&#123;</span><br><span class="line">   <span class="keyword">int</span> i;</span><br><span class="line">   <span class="keyword">for</span>(i=<span class="number">0</span>; i&lt;argc; i++)&#123;</span><br><span class="line">      <span class="built_in">printf</span>(<span class="string">&quot;%s = %s\n&quot;</span>, azColName[i], argv[i] ? argv[i] : <span class="string">&quot;NULL&quot;</span>);</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="built_in">printf</span>(<span class="string">&quot;\n&quot;</span>);</span><br><span class="line">   <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span>* argv[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">   sqlite3 *db;</span><br><span class="line">   <span class="keyword">char</span> *zErrMsg = <span class="number">0</span>;</span><br><span class="line">   <span class="keyword">int</span>  rc;</span><br><span class="line">   <span class="keyword">char</span> *sql;</span><br><span class="line"></span><br><span class="line">   <span class="comment">/* Open database */</span></span><br><span class="line">   rc = <span class="built_in">sqlite3_open</span>(<span class="string">&quot;test.db&quot;</span>, &amp;db);</span><br><span class="line">   <span class="keyword">if</span>( rc )&#123;</span><br><span class="line">      <span class="built_in">fprintf</span>(stderr, <span class="string">&quot;Can&#x27;t open database: %s\n&quot;</span>, <span class="built_in">sqlite3_errmsg</span>(db));</span><br><span class="line">      <span class="built_in">exit</span>(<span class="number">0</span>);</span><br><span class="line">   &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">      <span class="built_in">fprintf</span>(stdout, <span class="string">&quot;Opened database successfully\n&quot;</span>);</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="comment">/* Create SQL statement */</span></span><br><span class="line">   sql = <span class="string">&quot;CREATE TABLE COMPANY(&quot;</span>  \</span><br><span class="line">         <span class="string">&quot;ID INT PRIMARY KEY     NOT NULL,&quot;</span> \</span><br><span class="line">         <span class="string">&quot;NAME           TEXT    NOT NULL,&quot;</span> \</span><br><span class="line">         <span class="string">&quot;AGE            INT     NOT NULL,&quot;</span> \</span><br><span class="line">         <span class="string">&quot;ADDRESS        CHAR(50),&quot;</span> \</span><br><span class="line">         <span class="string">&quot;SALARY         REAL );&quot;</span>;</span><br><span class="line"></span><br><span class="line">   <span class="comment">/* Execute SQL statement */</span></span><br><span class="line">   rc = <span class="built_in">sqlite3_exec</span>(db, sql, callback, <span class="number">0</span>, &amp;zErrMsg);</span><br><span class="line">   <span class="keyword">if</span>( rc != SQLITE_OK )&#123;</span><br><span class="line">   <span class="built_in">fprintf</span>(stderr, <span class="string">&quot;SQL error: %s\n&quot;</span>, zErrMsg);</span><br><span class="line">      <span class="built_in">sqlite3_free</span>(zErrMsg);</span><br><span class="line">   &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">      <span class="built_in">fprintf</span>(stdout, <span class="string">&quot;Table created successfully\n&quot;</span>);</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="built_in">sqlite3_close</span>(db);</span><br><span class="line">   <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上述程序编译和执行时，它会在 test.db 文件中创建 COMPANY 表，最终文件列表如下所示：</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">-rwxr-xr-x. 1 root root 9567 May  8 02:31 a.out</span><br><span class="line">-rw-r--r--. 1 root root 1207 May  8 02:31 test.c</span><br><span class="line">-rw-r--r--. 1 root root 3072 May  8 02:31 test.db</span><br></pre></td></tr></table></figure>
+
+<h2 id="INSERT-操作"><a href="#INSERT-操作" class="headerlink" title="INSERT 操作"></a>INSERT 操作</h2><p>下面的 C 代码段显示了如何在上面创建的 COMPANY 表中创建记录：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sqlite3.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">callback</span><span class="params">(<span class="keyword">void</span> *NotUsed, <span class="keyword">int</span> argc, <span class="keyword">char</span> **argv, <span class="keyword">char</span> **azColName)</span></span>&#123;</span><br><span class="line">   <span class="keyword">int</span> i;</span><br><span class="line">   <span class="keyword">for</span>(i=<span class="number">0</span>; i&lt;argc; i++)&#123;</span><br><span class="line">      <span class="built_in">printf</span>(<span class="string">&quot;%s = %s\n&quot;</span>, azColName[i], argv[i] ? argv[i] : <span class="string">&quot;NULL&quot;</span>);</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="built_in">printf</span>(<span class="string">&quot;\n&quot;</span>);</span><br><span class="line">   <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span>* argv[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">   sqlite3 *db;</span><br><span class="line">   <span class="keyword">char</span> *zErrMsg = <span class="number">0</span>;</span><br><span class="line">   <span class="keyword">int</span> rc;</span><br><span class="line">   <span class="keyword">char</span> *sql;</span><br><span class="line"></span><br><span class="line">   <span class="comment">/* Open database */</span></span><br><span class="line">   rc = <span class="built_in">sqlite3_open</span>(<span class="string">&quot;test.db&quot;</span>, &amp;db);</span><br><span class="line">   <span class="keyword">if</span>( rc )&#123;</span><br><span class="line">      <span class="built_in">fprintf</span>(stderr, <span class="string">&quot;Can&#x27;t open database: %s\n&quot;</span>, <span class="built_in">sqlite3_errmsg</span>(db));</span><br><span class="line">      <span class="built_in">exit</span>(<span class="number">0</span>);</span><br><span class="line">   &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">      <span class="built_in">fprintf</span>(stderr, <span class="string">&quot;Opened database successfully\n&quot;</span>);</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="comment">/* Create SQL statement */</span></span><br><span class="line">   sql = <span class="string">&quot;INSERT INTO COMPANY (ID,NAME,AGE,ADDRESS,SALARY) &quot;</span>  \</span><br><span class="line">         <span class="string">&quot;VALUES (1, &#x27;Paul&#x27;, 32, &#x27;California&#x27;, 20000.00 ); &quot;</span> \</span><br><span class="line">         <span class="string">&quot;INSERT INTO COMPANY (ID,NAME,AGE,ADDRESS,SALARY) &quot;</span>  \</span><br><span class="line">         <span class="string">&quot;VALUES (2, &#x27;Allen&#x27;, 25, &#x27;Texas&#x27;, 15000.00 ); &quot;</span>     \</span><br><span class="line">         <span class="string">&quot;INSERT INTO COMPANY (ID,NAME,AGE,ADDRESS,SALARY)&quot;</span> \</span><br><span class="line">         <span class="string">&quot;VALUES (3, &#x27;Teddy&#x27;, 23, &#x27;Norway&#x27;, 20000.00 );&quot;</span> \</span><br><span class="line">         <span class="string">&quot;INSERT INTO COMPANY (ID,NAME,AGE,ADDRESS,SALARY)&quot;</span> \</span><br><span class="line">         <span class="string">&quot;VALUES (4, &#x27;Mark&#x27;, 25, &#x27;Rich-Mond &#x27;, 65000.00 );&quot;</span>;</span><br><span class="line"></span><br><span class="line">   <span class="comment">/* Execute SQL statement */</span></span><br><span class="line">   rc = <span class="built_in">sqlite3_exec</span>(db, sql, callback, <span class="number">0</span>, &amp;zErrMsg);</span><br><span class="line">   <span class="keyword">if</span>( rc != SQLITE_OK )&#123;</span><br><span class="line">      <span class="built_in">fprintf</span>(stderr, <span class="string">&quot;SQL error: %s\n&quot;</span>, zErrMsg);</span><br><span class="line">      <span class="built_in">sqlite3_free</span>(zErrMsg);</span><br><span class="line">   &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">      <span class="built_in">fprintf</span>(stdout, <span class="string">&quot;Records created successfully\n&quot;</span>);</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="built_in">sqlite3_close</span>(db);</span><br><span class="line">   <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上述程序编译和执行时，它会在 COMPANY 表中创建给定记录，并会显示以下两行：</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">Opened database successfully</span><br><span class="line">Records created successfully</span><br></pre></td></tr></table></figure>
+
+<h2 id="SELECT-操作"><a href="#SELECT-操作" class="headerlink" title="SELECT 操作"></a>SELECT 操作</h2><p>在我们开始讲解获取记录的实例之前，让我们先了解下回调函数的一些细节，这将在我们的实例使用到。这个回调提供了一个从 SELECT 语句获得结果的方式。它声明如下：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">typedef</span> <span class="title">int</span> <span class="params">(*sqlite3_callback)</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function"><span class="keyword">void</span>*,    <span class="comment">/* Data provided in the 4th argument of sqlite3_exec() */</span></span></span></span><br><span class="line"><span class="params"><span class="function"><span class="keyword">int</span>,      <span class="comment">/* The number of columns in row */</span></span></span></span><br><span class="line"><span class="params"><span class="function"><span class="keyword">char</span>**,   <span class="comment">/* An array of strings representing fields in the row */</span></span></span></span><br><span class="line"><span class="params"><span class="function"><span class="keyword">char</span>**    <span class="comment">/* An array of strings representing column names */</span></span></span></span><br><span class="line"><span class="params"><span class="function">)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p>如果上面的回调在 sqlite_exec() 程序中作为第三个参数，那么 SQLite 将为 SQL 参数内执行的每个 SELECT 语句中处理的每个记录调用这个回调函数。</p>
+<p>下面的 C 代码段显示了如何从前面创建的 COMPANY 表中获取并显示记录：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sqlite3.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">callback</span><span class="params">(<span class="keyword">void</span> *data, <span class="keyword">int</span> argc, <span class="keyword">char</span> **argv, <span class="keyword">char</span> **azColName)</span></span>&#123;</span><br><span class="line">   <span class="keyword">int</span> i;</span><br><span class="line">   <span class="built_in">fprintf</span>(stderr, <span class="string">&quot;%s: &quot;</span>, (<span class="keyword">const</span> <span class="keyword">char</span>*)data);</span><br><span class="line">   <span class="keyword">for</span>(i=<span class="number">0</span>; i&lt;argc; i++)&#123;</span><br><span class="line">      <span class="built_in">printf</span>(<span class="string">&quot;%s = %s\n&quot;</span>, azColName[i], argv[i] ? argv[i] : <span class="string">&quot;NULL&quot;</span>);</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="built_in">printf</span>(<span class="string">&quot;\n&quot;</span>);</span><br><span class="line">   <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span>* argv[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">   sqlite3 *db;</span><br><span class="line">   <span class="keyword">char</span> *zErrMsg = <span class="number">0</span>;</span><br><span class="line">   <span class="keyword">int</span> rc;</span><br><span class="line">   <span class="keyword">char</span> *sql;</span><br><span class="line">   <span class="keyword">const</span> <span class="keyword">char</span>* data = <span class="string">&quot;Callback function called&quot;</span>;</span><br><span class="line"></span><br><span class="line">   <span class="comment">/* Open database */</span></span><br><span class="line">   rc = <span class="built_in">sqlite3_open</span>(<span class="string">&quot;test.db&quot;</span>, &amp;db);</span><br><span class="line">   <span class="keyword">if</span>( rc )&#123;</span><br><span class="line">      <span class="built_in">fprintf</span>(stderr, <span class="string">&quot;Can&#x27;t open database: %s\n&quot;</span>, <span class="built_in">sqlite3_errmsg</span>(db));</span><br><span class="line">      <span class="built_in">exit</span>(<span class="number">0</span>);</span><br><span class="line">   &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">      <span class="built_in">fprintf</span>(stderr, <span class="string">&quot;Opened database successfully\n&quot;</span>);</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="comment">/* Create SQL statement */</span></span><br><span class="line">   sql = <span class="string">&quot;SELECT * from COMPANY&quot;</span>;</span><br><span class="line"></span><br><span class="line">   <span class="comment">/* Execute SQL statement */</span></span><br><span class="line">   rc = <span class="built_in">sqlite3_exec</span>(db, sql, callback, (<span class="keyword">void</span>*)data, &amp;zErrMsg);</span><br><span class="line">   <span class="keyword">if</span>( rc != SQLITE_OK )&#123;</span><br><span class="line">      <span class="built_in">fprintf</span>(stderr, <span class="string">&quot;SQL error: %s\n&quot;</span>, zErrMsg);</span><br><span class="line">      <span class="built_in">sqlite3_free</span>(zErrMsg);</span><br><span class="line">   &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">      <span class="built_in">fprintf</span>(stdout, <span class="string">&quot;Operation done successfully\n&quot;</span>);</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="built_in">sqlite3_close</span>(db);</span><br><span class="line">   <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上述程序编译和执行时，它会产生以下结果：</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">Opened database successfully</span><br><span class="line">Callback <span class="keyword">function</span> <span class="keyword">called</span>: ID <span class="operator">=</span> <span class="number">1</span></span><br><span class="line">NAME <span class="operator">=</span> Paul</span><br><span class="line">AGE <span class="operator">=</span> <span class="number">32</span></span><br><span class="line">ADDRESS <span class="operator">=</span> California</span><br><span class="line">SALARY <span class="operator">=</span> <span class="number">20000.0</span></span><br><span class="line"></span><br><span class="line">Callback <span class="keyword">function</span> <span class="keyword">called</span>: ID <span class="operator">=</span> <span class="number">2</span></span><br><span class="line">NAME <span class="operator">=</span> Allen</span><br><span class="line">AGE <span class="operator">=</span> <span class="number">25</span></span><br><span class="line">ADDRESS <span class="operator">=</span> Texas</span><br><span class="line">SALARY <span class="operator">=</span> <span class="number">15000.0</span></span><br><span class="line"></span><br><span class="line">Callback <span class="keyword">function</span> <span class="keyword">called</span>: ID <span class="operator">=</span> <span class="number">3</span></span><br><span class="line">NAME <span class="operator">=</span> Teddy</span><br><span class="line">AGE <span class="operator">=</span> <span class="number">23</span></span><br><span class="line">ADDRESS <span class="operator">=</span> Norway</span><br><span class="line">SALARY <span class="operator">=</span> <span class="number">20000.0</span></span><br><span class="line"></span><br><span class="line">Callback <span class="keyword">function</span> <span class="keyword">called</span>: ID <span class="operator">=</span> <span class="number">4</span></span><br><span class="line">NAME <span class="operator">=</span> Mark</span><br><span class="line">AGE <span class="operator">=</span> <span class="number">25</span></span><br><span class="line">ADDRESS <span class="operator">=</span> Rich<span class="operator">-</span>Mond</span><br><span class="line">SALARY <span class="operator">=</span> <span class="number">65000.0</span></span><br><span class="line"></span><br><span class="line">Operation done successfully</span><br></pre></td></tr></table></figure>
+
+<h2 id="UPDATE-操作"><a href="#UPDATE-操作" class="headerlink" title="UPDATE 操作"></a>UPDATE 操作</h2><p>下面的 C 代码段显示了如何使用 UPDATE 语句来更新任何记录，然后从 COMPANY 表中获取并显示更新的记录：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sqlite3.h&gt;</span> </span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">callback</span><span class="params">(<span class="keyword">void</span> *data, <span class="keyword">int</span> argc, <span class="keyword">char</span> **argv, <span class="keyword">char</span> **azColName)</span></span>&#123;</span><br><span class="line">   <span class="keyword">int</span> i;</span><br><span class="line">   <span class="built_in">fprintf</span>(stderr, <span class="string">&quot;%s: &quot;</span>, (<span class="keyword">const</span> <span class="keyword">char</span>*)data);</span><br><span class="line">   <span class="keyword">for</span>(i=<span class="number">0</span>; i&lt;argc; i++)&#123;</span><br><span class="line">      <span class="built_in">printf</span>(<span class="string">&quot;%s = %s\n&quot;</span>, azColName[i], argv[i] ? argv[i] : <span class="string">&quot;NULL&quot;</span>);</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="built_in">printf</span>(<span class="string">&quot;\n&quot;</span>);</span><br><span class="line">   <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span>* argv[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">   sqlite3 *db;</span><br><span class="line">   <span class="keyword">char</span> *zErrMsg = <span class="number">0</span>;</span><br><span class="line">   <span class="keyword">int</span> rc;</span><br><span class="line">   <span class="keyword">char</span> *sql;</span><br><span class="line">   <span class="keyword">const</span> <span class="keyword">char</span>* data = <span class="string">&quot;Callback function called&quot;</span>;</span><br><span class="line"></span><br><span class="line">   <span class="comment">/* Open database */</span></span><br><span class="line">   rc = <span class="built_in">sqlite3_open</span>(<span class="string">&quot;test.db&quot;</span>, &amp;db);</span><br><span class="line">   <span class="keyword">if</span>( rc )&#123;</span><br><span class="line">      <span class="built_in">fprintf</span>(stderr, <span class="string">&quot;Can&#x27;t open database: %s\n&quot;</span>, <span class="built_in">sqlite3_errmsg</span>(db));</span><br><span class="line">      <span class="built_in">exit</span>(<span class="number">0</span>);</span><br><span class="line">   &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">      <span class="built_in">fprintf</span>(stderr, <span class="string">&quot;Opened database successfully\n&quot;</span>);</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="comment">/* Create merged SQL statement */</span></span><br><span class="line">   sql = <span class="string">&quot;UPDATE COMPANY set SALARY = 25000.00 where ID=1; &quot;</span> \</span><br><span class="line">         <span class="string">&quot;SELECT * from COMPANY&quot;</span>;</span><br><span class="line"></span><br><span class="line">   <span class="comment">/* Execute SQL statement */</span></span><br><span class="line">   rc = <span class="built_in">sqlite3_exec</span>(db, sql, callback, (<span class="keyword">void</span>*)data, &amp;zErrMsg);</span><br><span class="line">   <span class="keyword">if</span>( rc != SQLITE_OK )&#123;</span><br><span class="line">      <span class="built_in">fprintf</span>(stderr, <span class="string">&quot;SQL error: %s\n&quot;</span>, zErrMsg);</span><br><span class="line">      <span class="built_in">sqlite3_free</span>(zErrMsg);</span><br><span class="line">   &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">      <span class="built_in">fprintf</span>(stdout, <span class="string">&quot;Operation done successfully\n&quot;</span>);</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="built_in">sqlite3_close</span>(db);</span><br><span class="line">   <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上述程序编译和执行时，它会产生以下结果：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">Opened database successfully</span><br><span class="line">Callback function called: ID = <span class="number">1</span></span><br><span class="line">NAME = Paul</span><br><span class="line">AGE = <span class="number">32</span></span><br><span class="line">ADDRESS = California</span><br><span class="line">SALARY = <span class="number">25000.0</span></span><br><span class="line"></span><br><span class="line">Callback function called: ID = <span class="number">2</span></span><br><span class="line">NAME = Allen</span><br><span class="line">AGE = <span class="number">25</span></span><br><span class="line">ADDRESS = Texas</span><br><span class="line">SALARY = <span class="number">15000.0</span></span><br><span class="line"></span><br><span class="line">Callback function called: ID = <span class="number">3</span></span><br><span class="line">NAME = Teddy</span><br><span class="line">AGE = <span class="number">23</span></span><br><span class="line">ADDRESS = Norway</span><br><span class="line">SALARY = <span class="number">20000.0</span></span><br><span class="line"></span><br><span class="line">Callback function called: ID = <span class="number">4</span></span><br><span class="line">NAME = Mark</span><br><span class="line">AGE = <span class="number">25</span></span><br><span class="line">ADDRESS = Rich-Mond</span><br><span class="line">SALARY = <span class="number">65000.0</span></span><br><span class="line"></span><br><span class="line">Operation done successfully</span><br></pre></td></tr></table></figure>
+
+<h2 id="DELETE-操作"><a href="#DELETE-操作" class="headerlink" title="DELETE 操作"></a>DELETE 操作</h2><p>下面的 C 代码段显示了如何使用 DELETE 语句删除任何记录，然后从 COMPANY 表中获取并显示剩余的记录：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sqlite3.h&gt;</span> </span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">callback</span><span class="params">(<span class="keyword">void</span> *data, <span class="keyword">int</span> argc, <span class="keyword">char</span> **argv, <span class="keyword">char</span> **azColName)</span></span>&#123;</span><br><span class="line">   <span class="keyword">int</span> i;</span><br><span class="line">   <span class="built_in">fprintf</span>(stderr, <span class="string">&quot;%s: &quot;</span>, (<span class="keyword">const</span> <span class="keyword">char</span>*)data);</span><br><span class="line">   <span class="keyword">for</span>(i=<span class="number">0</span>; i&lt;argc; i++)&#123;</span><br><span class="line">      <span class="built_in">printf</span>(<span class="string">&quot;%s = %s\n&quot;</span>, azColName[i], argv[i] ? argv[i] : <span class="string">&quot;NULL&quot;</span>);</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="built_in">printf</span>(<span class="string">&quot;\n&quot;</span>);</span><br><span class="line">   <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span>* argv[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">   sqlite3 *db;</span><br><span class="line">   <span class="keyword">char</span> *zErrMsg = <span class="number">0</span>;</span><br><span class="line">   <span class="keyword">int</span> rc;</span><br><span class="line">   <span class="keyword">char</span> *sql;</span><br><span class="line">   <span class="keyword">const</span> <span class="keyword">char</span>* data = <span class="string">&quot;Callback function called&quot;</span>;</span><br><span class="line"></span><br><span class="line">   <span class="comment">/* Open database */</span></span><br><span class="line">   rc = <span class="built_in">sqlite3_open</span>(<span class="string">&quot;test.db&quot;</span>, &amp;db);</span><br><span class="line">   <span class="keyword">if</span>( rc )&#123;</span><br><span class="line">      <span class="built_in">fprintf</span>(stderr, <span class="string">&quot;Can&#x27;t open database: %s\n&quot;</span>, <span class="built_in">sqlite3_errmsg</span>(db));</span><br><span class="line">      <span class="built_in">exit</span>(<span class="number">0</span>);</span><br><span class="line">   &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">      <span class="built_in">fprintf</span>(stderr, <span class="string">&quot;Opened database successfully\n&quot;</span>);</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="comment">/* Create merged SQL statement */</span></span><br><span class="line">   sql = <span class="string">&quot;DELETE from COMPANY where ID=2; &quot;</span> \</span><br><span class="line">         <span class="string">&quot;SELECT * from COMPANY&quot;</span>;</span><br><span class="line"></span><br><span class="line">   <span class="comment">/* Execute SQL statement */</span></span><br><span class="line">   rc = <span class="built_in">sqlite3_exec</span>(db, sql, callback, (<span class="keyword">void</span>*)data, &amp;zErrMsg);</span><br><span class="line">   <span class="keyword">if</span>( rc != SQLITE_OK )&#123;</span><br><span class="line">      <span class="built_in">fprintf</span>(stderr, <span class="string">&quot;SQL error: %s\n&quot;</span>, zErrMsg);</span><br><span class="line">      <span class="built_in">sqlite3_free</span>(zErrMsg);</span><br><span class="line">   &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">      <span class="built_in">fprintf</span>(stdout, <span class="string">&quot;Operation done successfully\n&quot;</span>);</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="built_in">sqlite3_close</span>(db);</span><br><span class="line">   <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上述程序编译和执行时，它会产生以下结果：</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">Opened database successfully</span><br><span class="line">Callback <span class="keyword">function</span> <span class="keyword">called</span>: ID <span class="operator">=</span> <span class="number">1</span></span><br><span class="line">NAME <span class="operator">=</span> Paul</span><br><span class="line">AGE <span class="operator">=</span> <span class="number">32</span></span><br><span class="line">ADDRESS <span class="operator">=</span> California</span><br><span class="line">SALARY <span class="operator">=</span> <span class="number">20000.0</span></span><br><span class="line"></span><br><span class="line">Callback <span class="keyword">function</span> <span class="keyword">called</span>: ID <span class="operator">=</span> <span class="number">3</span></span><br><span class="line">NAME <span class="operator">=</span> Teddy</span><br><span class="line">AGE <span class="operator">=</span> <span class="number">23</span></span><br><span class="line">ADDRESS <span class="operator">=</span> Norway</span><br><span class="line">SALARY <span class="operator">=</span> <span class="number">20000.0</span></span><br><span class="line"></span><br><span class="line">Callback <span class="keyword">function</span> <span class="keyword">called</span>: ID <span class="operator">=</span> <span class="number">4</span></span><br><span class="line">NAME <span class="operator">=</span> Mark</span><br><span class="line">AGE <span class="operator">=</span> <span class="number">25</span></span><br><span class="line">ADDRESS <span class="operator">=</span> Rich<span class="operator">-</span>Mond</span><br><span class="line">SALARY <span class="operator">=</span> <span class="number">65000.0</span></span><br><span class="line"></span><br><span class="line">Operation done successfully</span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>Sqlite3</category>
+      </categories>
+      <tags>
+        <tag>数据库</tag>
+        <tag>sqlite3</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Sqlite3 简单使用</title>
+    <url>/2021/08/11/Sqlite3-%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8/</url>
+    <content><![CDATA[<h3 id="创建数据库"><a href="#创建数据库" class="headerlink" title="创建数据库"></a>创建数据库</h3><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">$ sqlite3 database_name.db</span><br><span class="line">或者</span><br><span class="line">sqlite<span class="operator">&gt;</span> .<span class="keyword">open</span> database_name.db</span><br></pre></td></tr></table></figure>
+
+<h3 id="附加数据库"><a href="#附加数据库" class="headerlink" title="附加数据库"></a>附加数据库</h3><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">ATTACH DATABASE <span class="string">&#x27;file_name&#x27;</span> <span class="keyword">AS</span> <span class="string">&#x27;alias_name&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="分离数据库"><a href="#分离数据库" class="headerlink" title="分离数据库"></a>分离数据库</h3><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">DETACH DATABASE <span class="string">&#x27;alias_name&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<p>如果是临时数据库或直接销毁。</p>
+<h3 id="创建表"><a href="#创建表" class="headerlink" title="创建表"></a>创建表</h3><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> table_name(</span><br><span class="line">    xx		<span class="type">INT</span>		(<span class="keyword">NOT</span> <span class="keyword">NULL</span>),</span><br><span class="line">    xx		TEXT	(<span class="keyword">NOT</span> <span class="keyword">NULL</span>),</span><br><span class="line">    xx		<span class="type">CHAR</span>(<span class="number">5</span>)	(<span class="keyword">NOT</span> <span class="keyword">NULL</span>),</span><br><span class="line">    <span class="keyword">PRIMARY</span> KEY(xx, xx, ...)</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<h3 id="删除表"><a href="#删除表" class="headerlink" title="删除表"></a>删除表</h3><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">DROP</span> <span class="keyword">TABLE</span> table_name;</span><br></pre></td></tr></table></figure>
+
+<h3 id="INSERT"><a href="#INSERT" class="headerlink" title="INSERT"></a>INSERT</h3><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> table_name [(col1, col2, col3, ..., coln)]</span><br><span class="line"><span class="keyword">VALUES</span> (val1, val2, val3, ..., valn);</span><br></pre></td></tr></table></figure>
+
+<h3 id="SELECT"><a href="#SELECT" class="headerlink" title="SELECT"></a>SELECT</h3><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> col1, col2, col3</span><br><span class="line"><span class="keyword">FROM</span> table_name</span><br><span class="line"><span class="keyword">WHERE</span> [<span class="keyword">CONDITION</span>]</span><br></pre></td></tr></table></figure>
+
+<h3 id="算术运算符"><a href="#算术运算符" class="headerlink" title="算术运算符"></a>算术运算符</h3><table>
+<thead>
+<tr>
+<th align="left">运算符</th>
+<th align="left">描述</th>
+<th align="left">实例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">==</td>
+<td align="left">检查两个操作数的值是否相等，如果相等则条件为真。</td>
+<td align="left">(a == b) 不为真。</td>
+</tr>
+<tr>
+<td align="left">=</td>
+<td align="left">检查两个操作数的值是否相等，如果相等则条件为真。</td>
+<td align="left">(a = b) 不为真。</td>
+</tr>
+<tr>
+<td align="left">!=</td>
+<td align="left">检查两个操作数的值是否相等，如果不相等则条件为真。</td>
+<td align="left">(a != b) 为真。</td>
+</tr>
+<tr>
+<td align="left">&lt;&gt;</td>
+<td align="left">检查两个操作数的值是否相等，如果不相等则条件为真。</td>
+<td align="left">(a &lt;&gt; b) 为真。</td>
+</tr>
+<tr>
+<td align="left">&gt;</td>
+<td align="left">检查左操作数的值是否大于右操作数的值，如果是则条件为真。</td>
+<td align="left">(a &gt; b) 不为真。</td>
+</tr>
+<tr>
+<td align="left">&lt;</td>
+<td align="left">检查左操作数的值是否小于右操作数的值，如果是则条件为真。</td>
+<td align="left">(a &lt; b) 为真。</td>
+</tr>
+<tr>
+<td align="left">&gt;=</td>
+<td align="left">检查左操作数的值是否大于等于右操作数的值，如果是则条件为真。</td>
+<td align="left">(a &gt;= b) 不为真。</td>
+</tr>
+<tr>
+<td align="left">&lt;=</td>
+<td align="left">检查左操作数的值是否小于等于右操作数的值，如果是则条件为真。</td>
+<td align="left">(a &lt;= b) 为真。</td>
+</tr>
+<tr>
+<td align="left">!&lt;</td>
+<td align="left">检查左操作数的值是否不小于右操作数的值，如果是则条件为真。</td>
+<td align="left">(a !&lt; b) 为假。</td>
+</tr>
+<tr>
+<td align="left">!&gt;</td>
+<td align="left">检查左操作数的值是否不大于右操作数的值，如果是则条件为真。</td>
+<td align="left">(a !&gt; b) 为真。</td>
+</tr>
+</tbody></table>
+<h3 id="逻辑运算符"><a href="#逻辑运算符" class="headerlink" title="逻辑运算符"></a>逻辑运算符</h3><table>
+<thead>
+<tr>
+<th>运算符</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>AND</td>
+<td>AND运算符允许在一个SQL语句中的WHERE子句中的多个条件的存在</td>
+</tr>
+<tr>
+<td>BETWEEN</td>
+<td>BETWEEN 运算符用于在给定最小值和最大值范围内的一系列值中搜索值。</td>
+</tr>
+<tr>
+<td>EXISTS</td>
+<td>EXISTS 运算符用于在满足一定条件的指定表中搜索行的存在。</td>
+</tr>
+<tr>
+<td>IN</td>
+<td>IN 运算符用于把某个值与一系列指定列表的值进行比较。</td>
+</tr>
+<tr>
+<td>NOT IN</td>
+<td>IN 运算符的对立面，用于把某个值与不在一系列指定列表的值进行比较。</td>
+</tr>
+<tr>
+<td>LIKE</td>
+<td>LIKE 运算符用于把某个值与使用通配符运算符的相似值进行比较。</td>
+</tr>
+<tr>
+<td>GLOB</td>
+<td>GLOB 运算符用于把某个值与使用通配符运算符的相似值进行比较。GLOB 与 LIKE 不同之处在于，它是<strong>大小写敏感</strong>的。</td>
+</tr>
+<tr>
+<td>NOT</td>
+<td>NOT 运算符是所用的逻辑运算符的对立面。比如 NOT EXISTS、NOT BETWEEN、NOT IN，等等。<strong>它是否定运算符。</strong></td>
+</tr>
+<tr>
+<td>OR</td>
+<td>OR 运算符用于结合一个 SQL 语句的 WHERE 子句中的多个条件。</td>
+</tr>
+<tr>
+<td>IS NULL</td>
+<td>NULL 运算符用于把某个值与 NULL 值进行比较。</td>
+</tr>
+<tr>
+<td>IS</td>
+<td>IS 运算符与 = 相似。</td>
+</tr>
+<tr>
+<td>IS NOT</td>
+<td>IS NOT 运算符与 != 相似。</td>
+</tr>
+<tr>
+<td>||</td>
+<td>连接两个不同的字符串，得到一个新的字符串。</td>
+</tr>
+<tr>
+<td>UNIQUE</td>
+<td>UNIQUE 运算符搜索指定表中的每一行，确保唯一性（无重复）。</td>
+</tr>
+</tbody></table>
+<h3 id="位运算符"><a href="#位运算符" class="headerlink" title="位运算符"></a>位运算符</h3><table>
+<thead>
+<tr>
+<th align="left">运算符</th>
+<th align="left">描述</th>
+<th align="left">实例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">&amp;</td>
+<td align="left">如果同时存在于两个操作数中，二进制 AND 运算符复制一位到结果中。</td>
+<td align="left">(A &amp; B) 将得到 12，即为 0000 1100</td>
+</tr>
+<tr>
+<td align="left">|</td>
+<td align="left">如果存在于任一操作数中，二进制 OR 运算符复制一位到结果中。</td>
+<td align="left">(A | B) 将得到 61，即为 0011 1101</td>
+</tr>
+<tr>
+<td align="left">~</td>
+<td align="left">二进制补码运算符是一元运算符，具有”翻转”位效应，即0变成1，1变成0。</td>
+<td align="left">(~A ) 将得到 -61，即为 1100 0011，一个有符号二进制数的补码形式。</td>
+</tr>
+<tr>
+<td align="left">&lt;&lt;</td>
+<td align="left">二进制左移运算符。左操作数的值向左移动右操作数指定的位数。</td>
+<td align="left">A &lt;&lt; 2 将得到 240，即为 1111 0000</td>
+</tr>
+</tbody></table>
+<h3 id="表达式"><a href="#表达式" class="headerlink" title="表达式"></a>表达式</h3><p>是一个或多个值、运算符和计算值的SQL函数的组合。与公式类似，都写在查询语句中。您还可以使用特定的数据集来查询数据库。</p>
+<h3 id="UPDATE"><a href="#UPDATE" class="headerlink" title="UPDATE"></a>UPDATE</h3><p>用于修改表中已有的记录。可以使用带有 WHERE 子句的 UPDATE 查询来更新选定行，否则所有的行都会被更新。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">UPDATE table_name</span><br><span class="line"><span class="keyword">SET</span> col1<span class="operator">=</span>val1, col2<span class="operator">=</span>val2, ... coln<span class="operator">=</span>valn</span><br><span class="line"><span class="keyword">WHERE</span> [<span class="keyword">CONDITION</span>]</span><br></pre></td></tr></table></figure>
+
+<h3 id="DELETE"><a href="#DELETE" class="headerlink" title="DELETE"></a>DELETE</h3><p>用于删除表中已有的记录。可以使用带有 WHERE 子句的 DELETE 查询来删除选定行，否则所有的记录都会被删除。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">DELETE</span> <span class="keyword">FROM</span> table_name</span><br><span class="line"><span class="keyword">WHERE</span> [<span class="keyword">CONDITION</span>]</span><br></pre></td></tr></table></figure>
+
+<h3 id="LIKE"><a href="#LIKE" class="headerlink" title="LIKE"></a>LIKE</h3><p>用来匹配通配符指定模式的文本值。如果搜索表达式与模式表达式匹配，LIKE 运算符将返回真（true），也就是 1。这里有两个通配符与 LIKE 运算符一起使用</p>
+<ul>
+<li>%：代表<strong>零个或多个</strong>数字或字符。</li>
+<li>_：代表<strong>一个</strong>数字或字符。</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="left">语句</th>
+<th align="left">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">WHERE salary LIKE ‘200%’</td>
+<td align="left">查找以 200 开头的任意值</td>
+</tr>
+<tr>
+<td align="left">WHERE salary LIKE ‘%200%’</td>
+<td align="left">查找任意位置包含 200 的任意值</td>
+</tr>
+<tr>
+<td align="left">WHERE salary LIKE ‘_00%’</td>
+<td align="left">查找第二位和第三位为 00 的任意值</td>
+</tr>
+<tr>
+<td align="left">WHERE salary LIKE ‘2_%_%’</td>
+<td align="left">查找以 2 开头，且长度至少为 3 个字符的任意值</td>
+</tr>
+<tr>
+<td align="left">WHERE salary LIKE ‘%2’</td>
+<td align="left">查找以 2 结尾的任意值</td>
+</tr>
+<tr>
+<td align="left">WHERE salary LIKE ‘_2%3’</td>
+<td align="left">查找第二位为 2，且以 3 结尾的任意值</td>
+</tr>
+<tr>
+<td align="left">WHERE salary LIKE ‘2___3’</td>
+<td align="left">查找长度为 5 位数，且以 2 开头以 3 结尾的任意值</td>
+</tr>
+</tbody></table>
+<h3 id="GLOB"><a href="#GLOB" class="headerlink" title="GLOB"></a>GLOB</h3><p>用来匹配通配符指定模式的文本值。如果搜索表达式与模式表达式匹配，GLOB 运算符将返回真（true），也就是 1。与 LIKE 运算符不同的是，GLOB 是大小写敏感的，对于下面的通配符，它遵循 UNIX 的语法。</p>
+<ul>
+<li>*：代表<strong>零个或多个</strong>数字或字符。</li>
+<li>?：代表<strong>一个</strong>数字或字符。</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="left">语句</th>
+<th align="left">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">WHERE salary GLOB ‘200*’</td>
+<td align="left">查找以 200 开头的任意值</td>
+</tr>
+<tr>
+<td align="left">WHERE salary GLOB ‘<em>200</em>‘</td>
+<td align="left">查找任意位置包含 200 的任意值</td>
+</tr>
+<tr>
+<td align="left">WHERE salary GLOB ‘?00*’</td>
+<td align="left">查找第二位和第三位为 00 的任意值</td>
+</tr>
+<tr>
+<td align="left">WHERE salary GLOB ‘2??’</td>
+<td align="left">查找以 2 开头，且长度至少为 3 个字符的任意值</td>
+</tr>
+<tr>
+<td align="left">WHERE salary GLOB ‘*2’</td>
+<td align="left">查找以 2 结尾的任意值</td>
+</tr>
+<tr>
+<td align="left">WHERE salary GLOB ‘?2*3’</td>
+<td align="left">查找第二位为 2，且以 3 结尾的任意值</td>
+</tr>
+<tr>
+<td align="left">WHERE salary GLOB ‘2???3’</td>
+<td align="left">查找长度为 5 位数，且以 2 开头以 3 结尾的任意值</td>
+</tr>
+</tbody></table>
+<h3 id="LIMIT"><a href="#LIMIT" class="headerlink" title="LIMIT"></a>LIMIT</h3><p>用于限制由 SELECT 语句返回的数据数量</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> col1, col2, ..., coln</span><br><span class="line"><span class="keyword">FROM</span> table_name</span><br><span class="line">LIMIT [sizeof <span class="keyword">rows</span>]</span><br><span class="line"></span><br><span class="line"><span class="keyword">or</span> </span><br><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span> col1, col2, ..., coln</span><br><span class="line"><span class="keyword">FROM</span> table_name</span><br><span class="line">LIMIT [limit_num] <span class="keyword">OFFSET</span> [offset_num]</span><br></pre></td></tr></table></figure>
+
+<h3 id="ORDER-BY"><a href="#ORDER-BY" class="headerlink" title="ORDER BY"></a>ORDER BY</h3><p>用来基于一个或多个列按升序或降序顺序排列数据。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="keyword">column</span><span class="operator">-</span>list </span><br><span class="line"><span class="keyword">FROM</span> table_name </span><br><span class="line">[<span class="keyword">WHERE</span> <span class="keyword">condition</span>] </span><br><span class="line">[<span class="keyword">ORDER</span> <span class="keyword">BY</span> column1, column2, .. columnN] [<span class="keyword">ASC</span> <span class="operator">|</span> <span class="keyword">DESC</span>];</span><br></pre></td></tr></table></figure>
+
+<h3 id="GROUP-BY"><a href="#GROUP-BY" class="headerlink" title="GROUP BY"></a>GROUP BY</h3><p>用于与 SELECT 语句一起使用，来对相同的数据进行分组。在 SELECT 语句中，GROUP BY 子句放在 WHERE 子句之后，<strong>放在 ORDER BY 子句之前</strong>。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="keyword">column</span><span class="operator">-</span>list</span><br><span class="line"><span class="keyword">FROM</span> table_name</span><br><span class="line"><span class="keyword">WHERE</span> [ conditions ]</span><br><span class="line"><span class="keyword">GROUP</span> <span class="keyword">BY</span> column1, column2....columnN</span><br><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span> column1, column2....columnN</span><br></pre></td></tr></table></figure>
+
+<h3 id="HAVING"><a href="#HAVING" class="headerlink" title="HAVING"></a>HAVING</h3><p>HAVING 子句允许指定条件来过滤将出现在最终结果中的分组结果。</p>
+<p><strong>WHERE 子句在所选列上设置条件，而 HAVING 子句则在由 GROUP BY 子句创建的分组上设置条件。</strong></p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> column1, column2</span><br><span class="line"><span class="keyword">FROM</span> table1, table2</span><br><span class="line"><span class="keyword">WHERE</span> [ conditions ]</span><br><span class="line"><span class="keyword">GROUP</span> <span class="keyword">BY</span> column1, column2</span><br><span class="line"><span class="keyword">HAVING</span> [ conditions ]</span><br><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span> column1, column2</span><br></pre></td></tr></table></figure>
+
+<h3 id="DISTINCT"><a href="#DISTINCT" class="headerlink" title="DISTINCT"></a>DISTINCT</h3><p>与 SELECT 语句一起使用，来消除所有重复的记录，并只获取唯一一次记录。有可能出现一种情况，在一个表中有多个重复的记录。当提取这样的记录时，DISTINCT 关键字就显得特别有意义，它只获取唯一一次记录，而不是获取重复记录。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="keyword">DISTINCT</span> column1, column2,.....columnN </span><br><span class="line"><span class="keyword">FROM</span> table_name</span><br><span class="line"><span class="keyword">WHERE</span> [<span class="keyword">condition</span>]</span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>Sqlite3</category>
+      </categories>
+      <tags>
+        <tag>数据库</tag>
+        <tag>sqlite3</tag>
+      </tags>
+  </entry>
 </search>

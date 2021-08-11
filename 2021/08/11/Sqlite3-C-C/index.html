@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="SQLite - C&#x2F;C++前言本文是简单的sqlite3 c++ 接口应用，源自[菜鸟教程](SQLite – C&#x2F;C++ | 菜鸟教程 (runoob.com))，以便查询 安装在 C&#x2F;C++ 程序中使用 SQLite 之前，我们需要确保机器上已经有 SQLite 库。可以查看 SQLite 安装章节了解安装过程。 C&#x2F;C++ 接口 API以下是重要的 C&amp;C++ &#x2F; SQLite 接">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Sqlite3 C&#x2F;C++">
+<meta property="og:url" content="http://example.com/2021/08/11/Sqlite3-C-C/">
+<meta property="og:site_name" content="pen22">
+<meta property="og:description" content="SQLite - C&#x2F;C++前言本文是简单的sqlite3 c++ 接口应用，源自[菜鸟教程](SQLite – C&#x2F;C++ | 菜鸟教程 (runoob.com))，以便查询 安装在 C&#x2F;C++ 程序中使用 SQLite 之前，我们需要确保机器上已经有 SQLite 库。可以查看 SQLite 安装章节了解安装过程。 C&#x2F;C++ 接口 API以下是重要的 C&amp;C++ &#x2F; SQLite 接">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-08-11T11:35:58.000Z">
+<meta property="article:modified_time" content="2021-08-11T11:37:26.162Z">
+<meta property="article:author" content="pen22">
+<meta property="article:tag" content="数据库">
+<meta property="article:tag" content="sqlite3">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2021/08/11/Sqlite3-C-C/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Sqlite3 C/C++ | pen22</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">pen22</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-主页">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>主页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-标签">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-分类">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-归档">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/08/11/Sqlite3-C-C/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="pen22">
+      <meta itemprop="description" content="Computer Lover">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="pen22">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Sqlite3 C/C++
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-08-11 19:35:58" itemprop="dateCreated datePublished" datetime="2021-08-11T19:35:58+08:00">2021-08-11</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Sqlite3/" itemprop="url" rel="index"><span itemprop="name">Sqlite3</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2021/08/11/Sqlite3-C-C/" class="post-meta-item leancloud_visitors" data-flag-title="Sqlite3 C/C++" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2021/08/11/Sqlite3-C-C/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021/08/11/Sqlite3-C-C/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="SQLite-C-C"><a href="#SQLite-C-C" class="headerlink" title="SQLite - C/C++"></a>SQLite - C/C++</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>本文是简单的sqlite3 c++ 接口应用，源自[菜鸟教程](<a target="_blank" rel="noopener" href="https://www.runoob.com/sqlite/sqlite-c-cpp.html">SQLite – C/C++ | 菜鸟教程 (runoob.com)</a>)，以便查询</p>
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p>在 C/C++ 程序中使用 SQLite 之前，我们需要确保机器上已经有 SQLite 库。可以查看 SQLite 安装章节了解安装过程。</p>
+<h2 id="C-C-接口-API"><a href="#C-C-接口-API" class="headerlink" title="C/C++ 接口 API"></a>C/C++ 接口 API</h2><p>以下是重要的 C&amp;C++ / SQLite 接口程序，可以满足您在 C/C++ 程序中使用 SQLite 数据库的需求。如果您需要了解更多细节，请查看 SQLite 官方文档。</p>
+<span id="more"></span>
+
+<table>
+<thead>
+<tr>
+<th align="left">序号</th>
+<th align="left">API &amp; 描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">1</td>
+<td align="left">*<em>sqlite3_open(const char *filename, sqlite3 *<em>ppDb)</em></em> 该例程打开一个指向 SQLite 数据库文件的连接，返回一个用于其他 SQLite 程序的数据库连接对象。如果 <em>filename</em> 参数是 NULL 或 ‘:memory:’，那么 sqlite3_open() 将会在 RAM 中创建一个内存数据库，这只会在 session 的有效时间内持续。如果文件名 filename 不为 NULL，那么 sqlite3_open() 将使用这个参数值尝试打开数据库文件。如果该名称的文件不存在，sqlite3_open() 将创建一个新的命名为该名称的数据库文件并打开。</td>
+</tr>
+<tr>
+<td align="left">2</td>
+<td align="left"><strong>sqlite3_exec(sqlite3*, const char *sql, sqlite_callback, void *data, char * errmsg)</strong> 该例程提供了一个执行 SQL 命令的快捷方式，SQL 命令由 sql 参数提供，可以由多个 SQL 命令组成。在这里，第一个参数 <em>sqlite3</em> 是打开的数据库对象，<em>sqlite_callback</em> 是一个回调，<em>data</em> 作为其第一个参数，errmsg 将被返回用来获取程序生成的任何错误。sqlite3_exec() 程序解析并执行由 <strong>sql</strong> 参数所给的每个命令，直到字符串结束或者遇到错误为止。</td>
+</tr>
+<tr>
+<td align="left">3</td>
+<td align="left"><strong>sqlite3_close(sqlite3*)</strong> 该例程关闭之前调用 sqlite3_open() 打开的数据库连接。所有与连接相关的语句都应在连接关闭之前完成。如果还有查询没有完成，sqlite3_close() 将返回 SQLITE_BUSY 禁止关闭的错误消息。</td>
+</tr>
+</tbody></table>
+<h2 id="连接数据库"><a href="#连接数据库" class="headerlink" title="连接数据库"></a>连接数据库</h2><p>下面的 C 代码段显示了如何连接到一个现有的数据库。如果数据库不存在，那么它就会被创建，最后将返回一个数据库对象。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sqlite3.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span>* argv[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">   sqlite3 *db;</span><br><span class="line">   <span class="keyword">char</span> *zErrMsg = <span class="number">0</span>;</span><br><span class="line">   <span class="keyword">int</span> rc;</span><br><span class="line"></span><br><span class="line">   rc = <span class="built_in">sqlite3_open</span>(<span class="string">&quot;test.db&quot;</span>, &amp;db);</span><br><span class="line"></span><br><span class="line">   <span class="keyword">if</span>( rc )&#123;</span><br><span class="line">      <span class="built_in">fprintf</span>(stderr, <span class="string">&quot;Can&#x27;t open database: %s\n&quot;</span>, <span class="built_in">sqlite3_errmsg</span>(db));</span><br><span class="line">      <span class="built_in">exit</span>(<span class="number">0</span>);</span><br><span class="line">   &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">      <span class="built_in">fprintf</span>(stderr, <span class="string">&quot;Opened database successfully\n&quot;</span>);</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="built_in">sqlite3_close</span>(db);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>现在，让我们来编译和运行上面的程序，在当前目录中创建我们的数据库 <strong>test.db</strong>。您可以根据需要改变路径。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$gcc</span> test.c -l sqlite3</span><br><span class="line">$./a.out</span><br><span class="line">Opened database successfully</span><br></pre></td></tr></table></figure>
+
+<p>如果要使用 C++ 源代码，可以按照下列所示编译代码：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$g</span>++ test.c -l sqlite3</span><br></pre></td></tr></table></figure>
+
+<p>在这里，把我们的程序链接上 sqlite3 库，以便向 C 程序提供必要的函数。这将在您的目录下创建一个数据库文件 test.db，您将得到如下结果：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">-rwxr-xr-x. 1 root root 7383 May  8 02:06 a.out</span><br><span class="line">-rw-r--r--. 1 root root  323 May  8 02:05 test.c</span><br><span class="line">-rw-r--r--. 1 root root    0 May  8 02:06 test.db</span><br></pre></td></tr></table></figure>
+
+<h2 id="创建表"><a href="#创建表" class="headerlink" title="创建表"></a>创建表</h2><p>下面的 C 代码段将用于在先前创建的数据库中创建一个表：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sqlite3.h&gt;</span> </span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">callback</span><span class="params">(<span class="keyword">void</span> *NotUsed, <span class="keyword">int</span> argc, <span class="keyword">char</span> **argv, <span class="keyword">char</span> **azColName)</span></span>&#123;</span><br><span class="line">   <span class="keyword">int</span> i;</span><br><span class="line">   <span class="keyword">for</span>(i=<span class="number">0</span>; i&lt;argc; i++)&#123;</span><br><span class="line">      <span class="built_in">printf</span>(<span class="string">&quot;%s = %s\n&quot;</span>, azColName[i], argv[i] ? argv[i] : <span class="string">&quot;NULL&quot;</span>);</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="built_in">printf</span>(<span class="string">&quot;\n&quot;</span>);</span><br><span class="line">   <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span>* argv[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">   sqlite3 *db;</span><br><span class="line">   <span class="keyword">char</span> *zErrMsg = <span class="number">0</span>;</span><br><span class="line">   <span class="keyword">int</span>  rc;</span><br><span class="line">   <span class="keyword">char</span> *sql;</span><br><span class="line"></span><br><span class="line">   <span class="comment">/* Open database */</span></span><br><span class="line">   rc = <span class="built_in">sqlite3_open</span>(<span class="string">&quot;test.db&quot;</span>, &amp;db);</span><br><span class="line">   <span class="keyword">if</span>( rc )&#123;</span><br><span class="line">      <span class="built_in">fprintf</span>(stderr, <span class="string">&quot;Can&#x27;t open database: %s\n&quot;</span>, <span class="built_in">sqlite3_errmsg</span>(db));</span><br><span class="line">      <span class="built_in">exit</span>(<span class="number">0</span>);</span><br><span class="line">   &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">      <span class="built_in">fprintf</span>(stdout, <span class="string">&quot;Opened database successfully\n&quot;</span>);</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="comment">/* Create SQL statement */</span></span><br><span class="line">   sql = <span class="string">&quot;CREATE TABLE COMPANY(&quot;</span>  \</span><br><span class="line">         <span class="string">&quot;ID INT PRIMARY KEY     NOT NULL,&quot;</span> \</span><br><span class="line">         <span class="string">&quot;NAME           TEXT    NOT NULL,&quot;</span> \</span><br><span class="line">         <span class="string">&quot;AGE            INT     NOT NULL,&quot;</span> \</span><br><span class="line">         <span class="string">&quot;ADDRESS        CHAR(50),&quot;</span> \</span><br><span class="line">         <span class="string">&quot;SALARY         REAL );&quot;</span>;</span><br><span class="line"></span><br><span class="line">   <span class="comment">/* Execute SQL statement */</span></span><br><span class="line">   rc = <span class="built_in">sqlite3_exec</span>(db, sql, callback, <span class="number">0</span>, &amp;zErrMsg);</span><br><span class="line">   <span class="keyword">if</span>( rc != SQLITE_OK )&#123;</span><br><span class="line">   <span class="built_in">fprintf</span>(stderr, <span class="string">&quot;SQL error: %s\n&quot;</span>, zErrMsg);</span><br><span class="line">      <span class="built_in">sqlite3_free</span>(zErrMsg);</span><br><span class="line">   &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">      <span class="built_in">fprintf</span>(stdout, <span class="string">&quot;Table created successfully\n&quot;</span>);</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="built_in">sqlite3_close</span>(db);</span><br><span class="line">   <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上述程序编译和执行时，它会在 test.db 文件中创建 COMPANY 表，最终文件列表如下所示：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">-rwxr-xr-x. 1 root root 9567 May  8 02:31 a.out</span><br><span class="line">-rw-r--r--. 1 root root 1207 May  8 02:31 test.c</span><br><span class="line">-rw-r--r--. 1 root root 3072 May  8 02:31 test.db</span><br></pre></td></tr></table></figure>
+
+<h2 id="INSERT-操作"><a href="#INSERT-操作" class="headerlink" title="INSERT 操作"></a>INSERT 操作</h2><p>下面的 C 代码段显示了如何在上面创建的 COMPANY 表中创建记录：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sqlite3.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">callback</span><span class="params">(<span class="keyword">void</span> *NotUsed, <span class="keyword">int</span> argc, <span class="keyword">char</span> **argv, <span class="keyword">char</span> **azColName)</span></span>&#123;</span><br><span class="line">   <span class="keyword">int</span> i;</span><br><span class="line">   <span class="keyword">for</span>(i=<span class="number">0</span>; i&lt;argc; i++)&#123;</span><br><span class="line">      <span class="built_in">printf</span>(<span class="string">&quot;%s = %s\n&quot;</span>, azColName[i], argv[i] ? argv[i] : <span class="string">&quot;NULL&quot;</span>);</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="built_in">printf</span>(<span class="string">&quot;\n&quot;</span>);</span><br><span class="line">   <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span>* argv[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">   sqlite3 *db;</span><br><span class="line">   <span class="keyword">char</span> *zErrMsg = <span class="number">0</span>;</span><br><span class="line">   <span class="keyword">int</span> rc;</span><br><span class="line">   <span class="keyword">char</span> *sql;</span><br><span class="line"></span><br><span class="line">   <span class="comment">/* Open database */</span></span><br><span class="line">   rc = <span class="built_in">sqlite3_open</span>(<span class="string">&quot;test.db&quot;</span>, &amp;db);</span><br><span class="line">   <span class="keyword">if</span>( rc )&#123;</span><br><span class="line">      <span class="built_in">fprintf</span>(stderr, <span class="string">&quot;Can&#x27;t open database: %s\n&quot;</span>, <span class="built_in">sqlite3_errmsg</span>(db));</span><br><span class="line">      <span class="built_in">exit</span>(<span class="number">0</span>);</span><br><span class="line">   &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">      <span class="built_in">fprintf</span>(stderr, <span class="string">&quot;Opened database successfully\n&quot;</span>);</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="comment">/* Create SQL statement */</span></span><br><span class="line">   sql = <span class="string">&quot;INSERT INTO COMPANY (ID,NAME,AGE,ADDRESS,SALARY) &quot;</span>  \</span><br><span class="line">         <span class="string">&quot;VALUES (1, &#x27;Paul&#x27;, 32, &#x27;California&#x27;, 20000.00 ); &quot;</span> \</span><br><span class="line">         <span class="string">&quot;INSERT INTO COMPANY (ID,NAME,AGE,ADDRESS,SALARY) &quot;</span>  \</span><br><span class="line">         <span class="string">&quot;VALUES (2, &#x27;Allen&#x27;, 25, &#x27;Texas&#x27;, 15000.00 ); &quot;</span>     \</span><br><span class="line">         <span class="string">&quot;INSERT INTO COMPANY (ID,NAME,AGE,ADDRESS,SALARY)&quot;</span> \</span><br><span class="line">         <span class="string">&quot;VALUES (3, &#x27;Teddy&#x27;, 23, &#x27;Norway&#x27;, 20000.00 );&quot;</span> \</span><br><span class="line">         <span class="string">&quot;INSERT INTO COMPANY (ID,NAME,AGE,ADDRESS,SALARY)&quot;</span> \</span><br><span class="line">         <span class="string">&quot;VALUES (4, &#x27;Mark&#x27;, 25, &#x27;Rich-Mond &#x27;, 65000.00 );&quot;</span>;</span><br><span class="line"></span><br><span class="line">   <span class="comment">/* Execute SQL statement */</span></span><br><span class="line">   rc = <span class="built_in">sqlite3_exec</span>(db, sql, callback, <span class="number">0</span>, &amp;zErrMsg);</span><br><span class="line">   <span class="keyword">if</span>( rc != SQLITE_OK )&#123;</span><br><span class="line">      <span class="built_in">fprintf</span>(stderr, <span class="string">&quot;SQL error: %s\n&quot;</span>, zErrMsg);</span><br><span class="line">      <span class="built_in">sqlite3_free</span>(zErrMsg);</span><br><span class="line">   &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">      <span class="built_in">fprintf</span>(stdout, <span class="string">&quot;Records created successfully\n&quot;</span>);</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="built_in">sqlite3_close</span>(db);</span><br><span class="line">   <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上述程序编译和执行时，它会在 COMPANY 表中创建给定记录，并会显示以下两行：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Opened database successfully</span><br><span class="line">Records created successfully</span><br></pre></td></tr></table></figure>
+
+<h2 id="SELECT-操作"><a href="#SELECT-操作" class="headerlink" title="SELECT 操作"></a>SELECT 操作</h2><p>在我们开始讲解获取记录的实例之前，让我们先了解下回调函数的一些细节，这将在我们的实例使用到。这个回调提供了一个从 SELECT 语句获得结果的方式。它声明如下：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">typedef</span> <span class="title">int</span> <span class="params">(*sqlite3_callback)</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function"><span class="keyword">void</span>*,    <span class="comment">/* Data provided in the 4th argument of sqlite3_exec() */</span></span></span></span><br><span class="line"><span class="params"><span class="function"><span class="keyword">int</span>,      <span class="comment">/* The number of columns in row */</span></span></span></span><br><span class="line"><span class="params"><span class="function"><span class="keyword">char</span>**,   <span class="comment">/* An array of strings representing fields in the row */</span></span></span></span><br><span class="line"><span class="params"><span class="function"><span class="keyword">char</span>**    <span class="comment">/* An array of strings representing column names */</span></span></span></span><br><span class="line"><span class="params"><span class="function">)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p>如果上面的回调在 sqlite_exec() 程序中作为第三个参数，那么 SQLite 将为 SQL 参数内执行的每个 SELECT 语句中处理的每个记录调用这个回调函数。</p>
+<p>下面的 C 代码段显示了如何从前面创建的 COMPANY 表中获取并显示记录：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sqlite3.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">callback</span><span class="params">(<span class="keyword">void</span> *data, <span class="keyword">int</span> argc, <span class="keyword">char</span> **argv, <span class="keyword">char</span> **azColName)</span></span>&#123;</span><br><span class="line">   <span class="keyword">int</span> i;</span><br><span class="line">   <span class="built_in">fprintf</span>(stderr, <span class="string">&quot;%s: &quot;</span>, (<span class="keyword">const</span> <span class="keyword">char</span>*)data);</span><br><span class="line">   <span class="keyword">for</span>(i=<span class="number">0</span>; i&lt;argc; i++)&#123;</span><br><span class="line">      <span class="built_in">printf</span>(<span class="string">&quot;%s = %s\n&quot;</span>, azColName[i], argv[i] ? argv[i] : <span class="string">&quot;NULL&quot;</span>);</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="built_in">printf</span>(<span class="string">&quot;\n&quot;</span>);</span><br><span class="line">   <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span>* argv[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">   sqlite3 *db;</span><br><span class="line">   <span class="keyword">char</span> *zErrMsg = <span class="number">0</span>;</span><br><span class="line">   <span class="keyword">int</span> rc;</span><br><span class="line">   <span class="keyword">char</span> *sql;</span><br><span class="line">   <span class="keyword">const</span> <span class="keyword">char</span>* data = <span class="string">&quot;Callback function called&quot;</span>;</span><br><span class="line"></span><br><span class="line">   <span class="comment">/* Open database */</span></span><br><span class="line">   rc = <span class="built_in">sqlite3_open</span>(<span class="string">&quot;test.db&quot;</span>, &amp;db);</span><br><span class="line">   <span class="keyword">if</span>( rc )&#123;</span><br><span class="line">      <span class="built_in">fprintf</span>(stderr, <span class="string">&quot;Can&#x27;t open database: %s\n&quot;</span>, <span class="built_in">sqlite3_errmsg</span>(db));</span><br><span class="line">      <span class="built_in">exit</span>(<span class="number">0</span>);</span><br><span class="line">   &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">      <span class="built_in">fprintf</span>(stderr, <span class="string">&quot;Opened database successfully\n&quot;</span>);</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="comment">/* Create SQL statement */</span></span><br><span class="line">   sql = <span class="string">&quot;SELECT * from COMPANY&quot;</span>;</span><br><span class="line"></span><br><span class="line">   <span class="comment">/* Execute SQL statement */</span></span><br><span class="line">   rc = <span class="built_in">sqlite3_exec</span>(db, sql, callback, (<span class="keyword">void</span>*)data, &amp;zErrMsg);</span><br><span class="line">   <span class="keyword">if</span>( rc != SQLITE_OK )&#123;</span><br><span class="line">      <span class="built_in">fprintf</span>(stderr, <span class="string">&quot;SQL error: %s\n&quot;</span>, zErrMsg);</span><br><span class="line">      <span class="built_in">sqlite3_free</span>(zErrMsg);</span><br><span class="line">   &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">      <span class="built_in">fprintf</span>(stdout, <span class="string">&quot;Operation done successfully\n&quot;</span>);</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="built_in">sqlite3_close</span>(db);</span><br><span class="line">   <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上述程序编译和执行时，它会产生以下结果：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">Opened database successfully</span><br><span class="line">Callback <span class="keyword">function</span> <span class="keyword">called</span>: ID <span class="operator">=</span> <span class="number">1</span></span><br><span class="line">NAME <span class="operator">=</span> Paul</span><br><span class="line">AGE <span class="operator">=</span> <span class="number">32</span></span><br><span class="line">ADDRESS <span class="operator">=</span> California</span><br><span class="line">SALARY <span class="operator">=</span> <span class="number">20000.0</span></span><br><span class="line"></span><br><span class="line">Callback <span class="keyword">function</span> <span class="keyword">called</span>: ID <span class="operator">=</span> <span class="number">2</span></span><br><span class="line">NAME <span class="operator">=</span> Allen</span><br><span class="line">AGE <span class="operator">=</span> <span class="number">25</span></span><br><span class="line">ADDRESS <span class="operator">=</span> Texas</span><br><span class="line">SALARY <span class="operator">=</span> <span class="number">15000.0</span></span><br><span class="line"></span><br><span class="line">Callback <span class="keyword">function</span> <span class="keyword">called</span>: ID <span class="operator">=</span> <span class="number">3</span></span><br><span class="line">NAME <span class="operator">=</span> Teddy</span><br><span class="line">AGE <span class="operator">=</span> <span class="number">23</span></span><br><span class="line">ADDRESS <span class="operator">=</span> Norway</span><br><span class="line">SALARY <span class="operator">=</span> <span class="number">20000.0</span></span><br><span class="line"></span><br><span class="line">Callback <span class="keyword">function</span> <span class="keyword">called</span>: ID <span class="operator">=</span> <span class="number">4</span></span><br><span class="line">NAME <span class="operator">=</span> Mark</span><br><span class="line">AGE <span class="operator">=</span> <span class="number">25</span></span><br><span class="line">ADDRESS <span class="operator">=</span> Rich<span class="operator">-</span>Mond</span><br><span class="line">SALARY <span class="operator">=</span> <span class="number">65000.0</span></span><br><span class="line"></span><br><span class="line">Operation done successfully</span><br></pre></td></tr></table></figure>
+
+<h2 id="UPDATE-操作"><a href="#UPDATE-操作" class="headerlink" title="UPDATE 操作"></a>UPDATE 操作</h2><p>下面的 C 代码段显示了如何使用 UPDATE 语句来更新任何记录，然后从 COMPANY 表中获取并显示更新的记录：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sqlite3.h&gt;</span> </span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">callback</span><span class="params">(<span class="keyword">void</span> *data, <span class="keyword">int</span> argc, <span class="keyword">char</span> **argv, <span class="keyword">char</span> **azColName)</span></span>&#123;</span><br><span class="line">   <span class="keyword">int</span> i;</span><br><span class="line">   <span class="built_in">fprintf</span>(stderr, <span class="string">&quot;%s: &quot;</span>, (<span class="keyword">const</span> <span class="keyword">char</span>*)data);</span><br><span class="line">   <span class="keyword">for</span>(i=<span class="number">0</span>; i&lt;argc; i++)&#123;</span><br><span class="line">      <span class="built_in">printf</span>(<span class="string">&quot;%s = %s\n&quot;</span>, azColName[i], argv[i] ? argv[i] : <span class="string">&quot;NULL&quot;</span>);</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="built_in">printf</span>(<span class="string">&quot;\n&quot;</span>);</span><br><span class="line">   <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span>* argv[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">   sqlite3 *db;</span><br><span class="line">   <span class="keyword">char</span> *zErrMsg = <span class="number">0</span>;</span><br><span class="line">   <span class="keyword">int</span> rc;</span><br><span class="line">   <span class="keyword">char</span> *sql;</span><br><span class="line">   <span class="keyword">const</span> <span class="keyword">char</span>* data = <span class="string">&quot;Callback function called&quot;</span>;</span><br><span class="line"></span><br><span class="line">   <span class="comment">/* Open database */</span></span><br><span class="line">   rc = <span class="built_in">sqlite3_open</span>(<span class="string">&quot;test.db&quot;</span>, &amp;db);</span><br><span class="line">   <span class="keyword">if</span>( rc )&#123;</span><br><span class="line">      <span class="built_in">fprintf</span>(stderr, <span class="string">&quot;Can&#x27;t open database: %s\n&quot;</span>, <span class="built_in">sqlite3_errmsg</span>(db));</span><br><span class="line">      <span class="built_in">exit</span>(<span class="number">0</span>);</span><br><span class="line">   &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">      <span class="built_in">fprintf</span>(stderr, <span class="string">&quot;Opened database successfully\n&quot;</span>);</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="comment">/* Create merged SQL statement */</span></span><br><span class="line">   sql = <span class="string">&quot;UPDATE COMPANY set SALARY = 25000.00 where ID=1; &quot;</span> \</span><br><span class="line">         <span class="string">&quot;SELECT * from COMPANY&quot;</span>;</span><br><span class="line"></span><br><span class="line">   <span class="comment">/* Execute SQL statement */</span></span><br><span class="line">   rc = <span class="built_in">sqlite3_exec</span>(db, sql, callback, (<span class="keyword">void</span>*)data, &amp;zErrMsg);</span><br><span class="line">   <span class="keyword">if</span>( rc != SQLITE_OK )&#123;</span><br><span class="line">      <span class="built_in">fprintf</span>(stderr, <span class="string">&quot;SQL error: %s\n&quot;</span>, zErrMsg);</span><br><span class="line">      <span class="built_in">sqlite3_free</span>(zErrMsg);</span><br><span class="line">   &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">      <span class="built_in">fprintf</span>(stdout, <span class="string">&quot;Operation done successfully\n&quot;</span>);</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="built_in">sqlite3_close</span>(db);</span><br><span class="line">   <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上述程序编译和执行时，它会产生以下结果：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">Opened database successfully</span><br><span class="line">Callback function called: ID = <span class="number">1</span></span><br><span class="line">NAME = Paul</span><br><span class="line">AGE = <span class="number">32</span></span><br><span class="line">ADDRESS = California</span><br><span class="line">SALARY = <span class="number">25000.0</span></span><br><span class="line"></span><br><span class="line">Callback function called: ID = <span class="number">2</span></span><br><span class="line">NAME = Allen</span><br><span class="line">AGE = <span class="number">25</span></span><br><span class="line">ADDRESS = Texas</span><br><span class="line">SALARY = <span class="number">15000.0</span></span><br><span class="line"></span><br><span class="line">Callback function called: ID = <span class="number">3</span></span><br><span class="line">NAME = Teddy</span><br><span class="line">AGE = <span class="number">23</span></span><br><span class="line">ADDRESS = Norway</span><br><span class="line">SALARY = <span class="number">20000.0</span></span><br><span class="line"></span><br><span class="line">Callback function called: ID = <span class="number">4</span></span><br><span class="line">NAME = Mark</span><br><span class="line">AGE = <span class="number">25</span></span><br><span class="line">ADDRESS = Rich-Mond</span><br><span class="line">SALARY = <span class="number">65000.0</span></span><br><span class="line"></span><br><span class="line">Operation done successfully</span><br></pre></td></tr></table></figure>
+
+<h2 id="DELETE-操作"><a href="#DELETE-操作" class="headerlink" title="DELETE 操作"></a>DELETE 操作</h2><p>下面的 C 代码段显示了如何使用 DELETE 语句删除任何记录，然后从 COMPANY 表中获取并显示剩余的记录：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sqlite3.h&gt;</span> </span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">callback</span><span class="params">(<span class="keyword">void</span> *data, <span class="keyword">int</span> argc, <span class="keyword">char</span> **argv, <span class="keyword">char</span> **azColName)</span></span>&#123;</span><br><span class="line">   <span class="keyword">int</span> i;</span><br><span class="line">   <span class="built_in">fprintf</span>(stderr, <span class="string">&quot;%s: &quot;</span>, (<span class="keyword">const</span> <span class="keyword">char</span>*)data);</span><br><span class="line">   <span class="keyword">for</span>(i=<span class="number">0</span>; i&lt;argc; i++)&#123;</span><br><span class="line">      <span class="built_in">printf</span>(<span class="string">&quot;%s = %s\n&quot;</span>, azColName[i], argv[i] ? argv[i] : <span class="string">&quot;NULL&quot;</span>);</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="built_in">printf</span>(<span class="string">&quot;\n&quot;</span>);</span><br><span class="line">   <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span>* argv[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">   sqlite3 *db;</span><br><span class="line">   <span class="keyword">char</span> *zErrMsg = <span class="number">0</span>;</span><br><span class="line">   <span class="keyword">int</span> rc;</span><br><span class="line">   <span class="keyword">char</span> *sql;</span><br><span class="line">   <span class="keyword">const</span> <span class="keyword">char</span>* data = <span class="string">&quot;Callback function called&quot;</span>;</span><br><span class="line"></span><br><span class="line">   <span class="comment">/* Open database */</span></span><br><span class="line">   rc = <span class="built_in">sqlite3_open</span>(<span class="string">&quot;test.db&quot;</span>, &amp;db);</span><br><span class="line">   <span class="keyword">if</span>( rc )&#123;</span><br><span class="line">      <span class="built_in">fprintf</span>(stderr, <span class="string">&quot;Can&#x27;t open database: %s\n&quot;</span>, <span class="built_in">sqlite3_errmsg</span>(db));</span><br><span class="line">      <span class="built_in">exit</span>(<span class="number">0</span>);</span><br><span class="line">   &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">      <span class="built_in">fprintf</span>(stderr, <span class="string">&quot;Opened database successfully\n&quot;</span>);</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="comment">/* Create merged SQL statement */</span></span><br><span class="line">   sql = <span class="string">&quot;DELETE from COMPANY where ID=2; &quot;</span> \</span><br><span class="line">         <span class="string">&quot;SELECT * from COMPANY&quot;</span>;</span><br><span class="line"></span><br><span class="line">   <span class="comment">/* Execute SQL statement */</span></span><br><span class="line">   rc = <span class="built_in">sqlite3_exec</span>(db, sql, callback, (<span class="keyword">void</span>*)data, &amp;zErrMsg);</span><br><span class="line">   <span class="keyword">if</span>( rc != SQLITE_OK )&#123;</span><br><span class="line">      <span class="built_in">fprintf</span>(stderr, <span class="string">&quot;SQL error: %s\n&quot;</span>, zErrMsg);</span><br><span class="line">      <span class="built_in">sqlite3_free</span>(zErrMsg);</span><br><span class="line">   &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">      <span class="built_in">fprintf</span>(stdout, <span class="string">&quot;Operation done successfully\n&quot;</span>);</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="built_in">sqlite3_close</span>(db);</span><br><span class="line">   <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上述程序编译和执行时，它会产生以下结果：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">Opened database successfully</span><br><span class="line">Callback <span class="keyword">function</span> <span class="keyword">called</span>: ID <span class="operator">=</span> <span class="number">1</span></span><br><span class="line">NAME <span class="operator">=</span> Paul</span><br><span class="line">AGE <span class="operator">=</span> <span class="number">32</span></span><br><span class="line">ADDRESS <span class="operator">=</span> California</span><br><span class="line">SALARY <span class="operator">=</span> <span class="number">20000.0</span></span><br><span class="line"></span><br><span class="line">Callback <span class="keyword">function</span> <span class="keyword">called</span>: ID <span class="operator">=</span> <span class="number">3</span></span><br><span class="line">NAME <span class="operator">=</span> Teddy</span><br><span class="line">AGE <span class="operator">=</span> <span class="number">23</span></span><br><span class="line">ADDRESS <span class="operator">=</span> Norway</span><br><span class="line">SALARY <span class="operator">=</span> <span class="number">20000.0</span></span><br><span class="line"></span><br><span class="line">Callback <span class="keyword">function</span> <span class="keyword">called</span>: ID <span class="operator">=</span> <span class="number">4</span></span><br><span class="line">NAME <span class="operator">=</span> Mark</span><br><span class="line">AGE <span class="operator">=</span> <span class="number">25</span></span><br><span class="line">ADDRESS <span class="operator">=</span> Rich<span class="operator">-</span>Mond</span><br><span class="line">SALARY <span class="operator">=</span> <span class="number">65000.0</span></span><br><span class="line"></span><br><span class="line">Operation done successfully</span><br></pre></td></tr></table></figure>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/" rel="tag"><i class="fa fa-tag"></i> 数据库</a>
+              <a href="/tags/sqlite3/" rel="tag"><i class="fa fa-tag"></i> sqlite3</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/08/11/Sqlite3-%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8/" rel="prev" title="Sqlite3 简单使用">
+      <i class="fa fa-chevron-left"></i> Sqlite3 简单使用
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#SQLite-C-C"><span class="nav-number">1.</span> <span class="nav-text">SQLite - C&#x2F;C++</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85"><span class="nav-number">1.2.</span> <span class="nav-text">安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#C-C-%E6%8E%A5%E5%8F%A3-API"><span class="nav-number">1.3.</span> <span class="nav-text">C&#x2F;C++ 接口 API</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%9E%E6%8E%A5%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="nav-number">1.4.</span> <span class="nav-text">连接数据库</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E8%A1%A8"><span class="nav-number">1.5.</span> <span class="nav-text">创建表</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#INSERT-%E6%93%8D%E4%BD%9C"><span class="nav-number">1.6.</span> <span class="nav-text">INSERT 操作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SELECT-%E6%93%8D%E4%BD%9C"><span class="nav-number">1.7.</span> <span class="nav-text">SELECT 操作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#UPDATE-%E6%93%8D%E4%BD%9C"><span class="nav-number">1.8.</span> <span class="nav-text">UPDATE 操作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DELETE-%E6%93%8D%E4%BD%9C"><span class="nav-number">1.9.</span> <span class="nav-text">DELETE 操作</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="pen22"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">pen22</p>
+  <div class="site-description" itemprop="description">Computer Lover</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">13</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/chirsilver" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;chirsilver" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:chirsisokk@outlook.com" title="E-Mail → mailto:chirsisokk@outlook.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">pen22</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-pjax@0/pjax.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+<script data-pjax>
+if (document.querySelectorAll('pre.mermaid').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mermaid@8/dist/mermaid.min.js', () => {
+    mermaid.initialize({
+      theme    : 'forest',
+      logLevel : 3,
+      flowchart: { curve     : 'linear' },
+      gantt    : { axisFormat: '%m/%d/%Y' },
+      sequence : { actorMargin: 50 }
+    });
+  }, window.mermaid);
+}
+</script>
+
+
+    <div id="pjax">
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+          load: ['[tex]/mhchem'],
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+          packages: {'[+]': ['mhchem']},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine@latest/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = '绰号,邮箱,网址(可不填)';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : true,
+      notify     : true,
+      appId      : 'xvMQcHiAJUo9cHVgVHUbCvD9-gzGzoHsz',
+      appKey     : 'GtD01vPhtdBVwyeYbuWBwYPX',
+      placeholder: "快来说点啥吧~~",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '20' || 10,
+      visitor    : true,
+      lang       : 'zh-cn' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+    </div>
+</body>
+</html>
